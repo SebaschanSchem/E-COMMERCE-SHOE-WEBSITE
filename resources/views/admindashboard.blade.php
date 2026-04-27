@@ -6,9 +6,9 @@
         <header class="flex items-center justify-between px-5 py-3 bg-[#22223b] border-b border-[#33335a]">
 
             <!-- Brand -->
-            <button class="bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold px-3 py-1.5 rounded-md transition">
-                AdminPanel
-            </button>
+            <div class="flex items-center gap-3 round ">
+        <img src="{{ asset('img/logo.png') }}" class="w-28 rounded-[10px]">
+    </div>
 
             <!-- Right side -->
             <div class="flex items-center gap-4">
@@ -21,33 +21,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
                     </svg>
                 </div>
-
-                <!-- Bell -->
-                <button class="relative text-white/50 hover:text-white transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18 14.158V11a6 6 0 1 0-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 1 1-6 0v-1m6 0H9"/>
-                    </svg>
-                    <span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-indigo-400"></span>
-                </button>
-
+                
                 <!-- User dropdown -->
                 <div class="relative group">
                     <button class="flex items-center gap-2 text-sm text-white/70 hover:text-white transition">
                         <div class="w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold text-white">U</div>
-                        <span class="hidden md:inline">User_Account@exp</span>
-                        <svg class="w-3 h-3 text-white/30" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                        </svg>
                     </button>
-
-                    <!-- Dropdown menu -->
-                    <div class="absolute right-0 top-full mt-2 w-36 bg-[#22223b] border border-[#33335a] rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
-                        <a href="#" class="flex items-center gap-2 px-4 py-2.5 text-sm text-white/70 hover:bg-[#2a2a45] hover:text-white transition">Profile</a>
-                        <a href="#" class="flex items-center gap-2 px-4 py-2.5 text-sm text-white/70 hover:bg-[#2a2a45] hover:text-white transition">Settings</a>
-                        <hr class="border-[#33335a]">
-                        <a href="#" class="flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-[#2a2a45] transition">Log out</a>
-                    </div>
-                </div>
 
             </div>
         </header>
@@ -60,8 +39,7 @@
 
                 <nav class="flex flex-col gap-1 px-2">
 
-                    <!-- Home (active) -->
-                    <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-indigo-300 bg-indigo-500/10 border-l-2 border-indigo-500 transition">
+                    <a href="/admindashboard" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-indigo-300 bg-indigo-500/10 border-l-2 border-indigo-500 transition">
                         <div class="flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 0 0 1 1h3m10-11l2 2m-2-2v10a1 1 0 0 1-1 1h-3m-4 0h4"/>
@@ -73,32 +51,29 @@
                         </svg>
                     </a>
 
-                    <!-- Queue nav items -->
-                    <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm text-white/50 hover:bg-white/5 hover:text-white transition">
+                    <a href="/adminproduct" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm text-white/50 hover:bg-white/5 hover:text-white transition">
                         <div class="flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2m14 0V9a2 2 0 0 0-2-2M5 11V9a2 2 0 0 1 2-2m0 0h10M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/>
                             </svg>
-                            Queue nav items
+                        Product
                         </div>
                         <svg class="w-3.5 h-3.5 text-white/20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
                         </svg>
                     </a>
 
-                    <!-- Another nav items -->
-                    <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm text-white/50 hover:bg-white/5 hover:text-white transition">
+                    <a href="/" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm text-white/50 hover:bg-white/5 hover:text-white transition">
                         <div class="flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/>
                             </svg>
-                            Another nav items
+                            Log Out
                         </div>
                         <svg class="w-3.5 h-3.5 text-white/20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
                         </svg>
-                    </a>
-
+                    </a>             
                 </nav>
 
             </aside>

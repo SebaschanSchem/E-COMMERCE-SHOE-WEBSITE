@@ -13,18 +13,6 @@
            
         </div>
 
-        <!-- PAGINATION -->
-        <div class="flex justify-center mt-6">
-            <div class="flex gap-2 bg-black text-white px-4 py-2 rounded-full text-sm">
-                <span class="bg-white text-black px-2 rounded">1</span>
-                <span>2</span>
-                <span>3</span>
-                <span>...</span>
-                <span>67</span>
-                <span>88</span>
-            </div>
-        </div>
-
     </div>
 
 </section>
@@ -42,7 +30,7 @@
 
             <!-- IMAGE -->
             <div class="bg-white p-4 rounded-xl">
-                <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f2392cd9-24ab-4afa-a9b4-ae193d393dba/dfj3rav-e8565e08-45ea-4b22-a5d9-45a76adda15c.jpg/v1/fill/w_894,h_894,q_70,strp/shoe_poster_design_by_sintukumar_dfj3rav-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTI4MCIsInBhdGgiOiIvZi9mMjM5MmNkOS0yNGFiLTRhZmEtYTliNC1hZTE5M2QzOTNkYmEvZGZqM3Jhdi1lODU2NWUwOC00NWVhLTRiMjItYTVkOS00NWE3NmFkZGExNWMuanBnIiwid2lkdGgiOiI8PTEyODAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.6xee7EbH7mOaRAQjYTa07j4eYIaTbOjoBBk8Ts9Q_wc"
+                <img src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/shoe-poster-design-template-4166448a83bcad7c01288993606a0049_screen.jpg?ts=1719595955"
                      class="w-full rounded-lg">
             </div>
 
@@ -51,13 +39,11 @@
                 <h3 class="text-2xl font-bold mb-4">NIKE SAPATOSAN</h3>
 
                 <p class="text-gray-300 text-sm leading-relaxed mb-4">
-                    Nike is a well-known brand that people like because it feels good to wear
-                    and looks stylish at the same time. One of its biggest benefits is comfort.
+                    Nike is a well-known brand that people like because it feels good to wear and looks stylish at the same time. One of its biggest benefits is comfort—its shoes and clothes are made with lightweight and breathable materials, so they’re great for everyday use or sports.
                 </p>
 
                 <p class="text-gray-300 text-sm leading-relaxed">
-                    Another thing people like is performance. Nike shoes are designed with
-                    good cushioning and support for running, walking, and training.
+                    Another thing people like is performance. Nike shoes are designed with good cushioning and support, which helps when running, walking, or working out. They also last a long time, even if you use them often.
                 </p>
             </div>
         </div>
@@ -79,26 +65,41 @@
 
             <!-- TEXT -->
             <div>
-                <h3 class="text-2xl font-bold mb-4">NIKE SAPATOSAN</h3>
+                <h3 class="text-2xl font-bold mb-4">HOW IT MADE</h3>
 
                 <p class="text-gray-300 text-sm leading-relaxed mb-4">
-                    Nike is a well-known brand that people like because it feels good to wear
-                    and looks stylish at the same time. One of its biggest benefits is comfort.
+                    how each section—like the toe box, laces, insole, midsole, and outsole—helps provide comfort, support, fit, and stability when walking or running.
                 </p>
 
                 <p class="text-gray-300 text-sm leading-relaxed">
-                    Another thing people like is performance. Nike shoes are designed with
-                    good cushioning and support for running, walking, and training.
+                    the anatomy of a shoe by breaking it down into different parts and explaining the function of each. The upper section includes the toe box, which provides space for the toes to move comfortably, the laces that secure the shoe for a proper fit, and the collar and heel counter that support and stabilize the ankle and heel. The body of the shoe is made from flexible material to adapt to the shape of the foot. Inside, the insole helps distribute pressure evenly.
                 </p>
             </div>
+            <br>
 
         </div>
 
-        <div class="flex flex-wrap justify-center gap-6 mb-10">
+        <div class="text-center mb-10">
 
-        <h2 class="text-3xl font-bold text-center mb-8 tracking-wide">AVAILABLE IN:</h2>
-            <img src="">
-        </div>
+    <h2 class="text-3xl font-bold mb-6 tracking-wide text-center">AVAILABLE IN:</h2>
+
+<div class="flex justify-center items-center gap-16">
+
+    <!-- ONLINE -->
+    <div class="flex flex-col items-center">
+        <img src="{{ asset('img/online.png') }}" class="w-full h-auto object-contain rounded-[10px]">
+        <h3 class="mt-3 text-lg font-semibold">ONLINE</h3>
+    </div>
+
+    <!-- STORE -->
+    <div class="flex flex-col items-center">
+        <img src="{{ asset('img/store.png') }}" class="w-full h-auto object-contain rounded-[10px]">
+        <h3 class="mt-3 text-lg font-semibold">STORE</h3>
+    </div>
+
+</div>
+
+</div>
 
         <div class="relative z-10 flex flex-col items-center px-6 text-center">
         <br>

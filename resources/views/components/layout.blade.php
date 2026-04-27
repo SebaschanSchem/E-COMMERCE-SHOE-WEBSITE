@@ -33,12 +33,16 @@
     <div class="flex items-center gap-4 text-sm">
         <div class="flex items-center gap-3">
 
-            <img src="{{ asset('img/shopping-cart.png') }}" alt="cart"
-                 class="w-6 h-6 opacity-80">
+            <a href="/addtocart">
+    <img src="{{ asset('img/shopping-cart.png') }}" alt="cart"
+         class="w-6 h-6 opacity-80 cursor-pointer">
+</a>
 
-            <button class="bg-white text-black px-3 py-1 rounded hover:bg-gray-200 transition">
-                LOG OUT
-            </button>
+            <a href="/login">
+    <button class="bg-white text-black px-3 py-1 rounded hover:bg-gray-200 transition">
+        LOG OUT
+    </button>
+</a>
 
         </div>
     </div>

@@ -122,4 +122,4 @@
 
 </div>
 
-</x-layout>
+</x-layouts>

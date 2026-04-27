@@ -20,7 +20,7 @@
             {{-- Image --}}
             <div class="shrink-0 w-28 h-24 bg-[#2c2c2c] rounded-sm overflow-hidden flex items-center justify-center border border-border">
                 <img
-                    src="https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/adidas-adizero-evo-sl-shoes.jpg"
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnvRodEiEqb4QZqvFoWw33tfPoj36YV4UDlg&s"
                     alt="Adizero EVO SL"
                     class="w-full h-full object-cover object-center"
                     onerror="this.src='https://placehold.co/112x96/2c2c2c/888888?text=Shoe'"
@@ -64,7 +64,7 @@
 
             <div class="shrink-0 w-28 h-24 bg-[#2c2c2c] rounded-sm overflow-hidden flex items-center justify-center border border-border">
                 <img
-                    src="https://sneakernews.com/wp-content/uploads/2023/02/air-jordan-1-mid-se.jpg"
+                    src="https://www.slamdunk.gr/2960984-product_large/jordan-air-1-mid-se.jpg"
                     alt="Air Jordan 1 Mid SE"
                     class="w-full h-full object-cover object-center"
                     onerror="this.src='https://placehold.co/112x96/2c2c2c/888888?text=Shoe'"
@@ -106,7 +106,7 @@
 
             <div class="shrink-0 w-28 h-24 bg-[#2c2c2c] rounded-sm overflow-hidden flex items-center justify-center border border-border">
                 <img
-                    src="https://www.onitsuka-tiger.com/dw/image/v2/BBBJ_PRD/on/demandware.static/-/Sites-master-catalog-onitsuka/default/dw5c41c52a/images/hi-res/1183A757_250_SR_RT_GLB.jpg"
+                    src="https://asics.scene7.com/is/image/asics/1183C430_020_SR_RT_GLB?$otmag_zoom$&qlt=99,1"
                     alt="Tokuten"
                     class="w-full h-full object-cover object-center"
                     onerror="this.src='https://placehold.co/112x96/2c2c2c/888888?text=Shoe'"
@@ -150,7 +150,7 @@
 
         <div class="space-y-1">
             <div class="flex items-center gap-4">
-                <span class="font-body text-xs text-muted uppercase tracking-widest">Items (1)</span>
+                <span class="font-body text-xs text-muted uppercase tracking-widest">Items (3)</span>
                 <span class="font-mono text-xs text-muted">·</span>
                 <span class="font-body text-xs text-muted">Free shipping on orders over ₱2,000</span>
             </div>
@@ -160,12 +160,29 @@
             </div>
         </div>
 
-        <button
-            class="checkout-btn bg-accent text-darker font-display text-lg tracking-[0.15em] uppercase px-10 py-4 hover:bg-gold transition-colors w-full sm:w-auto"
-        >
-            Checkout Now (1)
-        </button>
+        <a href="/cod"
+   class="checkout-btn bg-white text-black font-display text-lg tracking-[0.15em] uppercase px-10 py-4 hover:bg-gray-200 transition-colors w-full sm:w-auto rounded-[10px] inline-block text-center">
+    Checkout Now
+</a>
     </div>
+
+    <div class="relative z-10 flex flex-col items-center px-6 text-center">
+        <br>
+        <h1>FOLLOW US ON:</h1>
+
+        <div class="mt-10 flex gap-6 text-blue-200/70">
+            <img src="{{ asset('img/yt.png') }}" 
+                 alt="YouTube"
+                 class="w-32 h-32 hover:scale-110 transition cursor-pointer">
+            <img src="{{ asset('img/ig.png') }}" 
+                 alt="IG"
+                 class="w-32 h-32 hover:scale-110 transition cursor-pointer">
+            <img src="{{ asset('img/x.png') }}" 
+                 alt="X"
+                 class="w-32 h-32 hover:scale-110 transition cursor-pointer">
+        </div>
+
+        </div>
 
 </div>
 
