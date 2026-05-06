@@ -1,125 +1,128 @@
-<x-layout title="Home | E-COMMERCE-SHOE-WEBSITE">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<x-layout title="Checkout | E-COMMERCE-SHOE-WEBSITE">
 
-<!-- Background -->
-<div class="absolute inset-0 bg-cover bg-center opacity-30"
-     style="background-image: url('/images/bg.jpg');">
-</div>
+<div class="relative z-10 p-6 max-w-6xl mx-auto">
+    @if (session('status'))
+        <div class="mb-4 rounded-lg bg-green-500/20 border border-green-300/30 px-4 py-3 text-sm">
+            {{ session('status') }}
+        </div>
+    @endif
 
-<div class="relative z-10 p-6">
-    <!-- Delivery Address -->
     <div class="mb-6">
-        <h2 class="text-lg font-semibold mb-2">delivery address</h2>
-
-        <div class="flex justify-between text-xs text-gray-300">
-            <div>
-                Dasmariñas, Crisforte Karrie (+63)<br>
-                965 328 8219
-            </div>
-
-            <div class="text-right">
-                Prk 1, Balagunan Dasmariñas likod sa balagunan national high school,
-                Balagunan, Santo Tomas, Mindanao, Davao Del Norte 8112
-            </div>
+        <div class="flex items-center justify-between gap-4 mb-3">
+            <h2 class="text-lg font-semibold">Delivery Address</h2>
+            @if ($checkoutDetails && ! $canEdit)
+                <a href="/checkout?edit=1" class="bg-gray-700 px-3 py-1 text-xs rounded hover:bg-gray-600">Edit</a>
+            @endif
         </div>
 
-        <div class="flex gap-2 mt-2 justify-end">
-            <button class="bg-gray-700 px-2 py-1 text-[10px] rounded">default</button>
-            <button class="bg-gray-700 px-2 py-1 text-[10px] rounded">change</button>
-        </div>
+        @if ($canEdit)
+            <form method="POST" action="/checkout" id="checkoutForm" class="grid md:grid-cols-3 gap-3 bg-[#181818] border border-gray-800 rounded-lg p-4">
+                @csrf
+                @if ($checkoutDetails)
+                    <input type="hidden" name="allow_update" value="1">
+                @endif
+
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Full Name</label>
+                    <input type="text" name="full_name" value="{{ old('full_name', $checkoutDetails['full_name'] ?? '') }}" class="w-full bg-black border border-gray-700 rounded px-3 py-2 text-sm" required>
+                    @error('full_name') <p class="text-xs text-red-300 mt-1">{{ $message }}</p> @enderror
+                </div>
+
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Address</label>
+                    <input type="text" name="address" value="{{ old('address', $checkoutDetails['address'] ?? '') }}" class="w-full bg-black border border-gray-700 rounded px-3 py-2 text-sm" required>
+                    @error('address') <p class="text-xs text-red-300 mt-1">{{ $message }}</p> @enderror
+                </div>
+
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Contact Number</label>
+                    <input type="text" name="contact_number" value="{{ old('contact_number', $checkoutDetails['contact_number'] ?? '') }}" class="w-full bg-black border border-gray-700 rounded px-3 py-2 text-sm" required>
+                    @error('contact_number') <p class="text-xs text-red-300 mt-1">{{ $message }}</p> @enderror
+                </div>
+            </form>
+        @elseif ($checkoutDetails)
+            <div class="flex justify-between text-xs text-gray-300 bg-[#181818] border border-gray-800 rounded-lg p-4">
+                <div>
+                    {{ $checkoutDetails['full_name'] }}<br>
+                    {{ $checkoutDetails['contact_number'] }}
+                </div>
+
+                <div class="text-right max-w-xl">
+                    {{ $checkoutDetails['address'] }}
+                </div>
+            </div>
+        @endif
     </div>
 
     <hr class="border-gray-700 my-6">
 
-    <!-- Products Ordered -->
     <div>
         <h2 class="text-lg italic mb-4">Products Ordered</h2>
 
-        <!-- Table Header -->
         <div class="grid grid-cols-5 text-xs text-gray-400 mb-3">
             <div class="col-span-2"></div>
             <div>Unit Price</div>
-            <div>QuantityItem</div>
+            <div>Quantity Item</div>
             <div>Subtotal</div>
         </div>
 
-        <!-- Product Item -->
-        @for ($i = 0; $i < 3; $i++)
-        <div class="grid grid-cols-5 items-center gap-4 mb-6">
+        @forelse ($products as $product)
+            @php
+                $image = str_starts_with($product->image, 'http') ? $product->image : asset($product->image);
+            @endphp
 
-            <!-- Image + Name -->
-            <div class="col-span-2 flex gap-3 items-center">
-                <div class="bg-gray-200 w-20 h-20 flex items-center justify-center">
-                    <img src="/images/shoe.png" class="h-12">
+            <div class="grid grid-cols-5 items-center gap-4 mb-6">
+                <div class="col-span-2 flex gap-3 items-center">
+                    <div class="bg-gray-200 w-20 h-20 flex items-center justify-center rounded overflow-hidden">
+                        <img src="{{ $image }}" alt="{{ $product->name }}" class="w-full h-full object-contain">
+                    </div>
+
+                    <div class="text-xs">
+                        <div class="font-semibold">{{ $product->name }}</div>
+                        <div class="text-gray-400 capitalize">{{ $product->category }}</div>
+                        <div class="text-gray-500 text-[10px]">SIZE: 42</div>
+                    </div>
                 </div>
 
-                <div class="text-xs">
-                    <div class="font-semibold">Adizero EVO SL Shoes</div>
-                    <div class="text-gray-400">Unisex in For All Time</div>
-                    <div class="text-gray-500 text-[10px]">SIZE: 42</div>
-                </div>
+                <div class="text-xs">Php {{ number_format($product->price, 2) }}</div>
+                <div class="text-xs text-center">1</div>
+                <div class="text-xs">Php {{ number_format($product->price, 2) }}</div>
             </div>
-
-            <div class="text-xs">₱ 6,800</div>
-            <div class="text-xs text-center">2</div>
-            <div class="text-xs">₱ 13,600</div>
-        </div>
-        @endfor
-
-    </div>
-
-    <!-- Protection -->
-    <div class="text-[10px] text-gray-400 mt-6">
-        <span class="text-red-400">Merchandise Protection</span><br>
-        safeguard items from accidental damage and liquid damage after shipping.
+        @empty
+            <div class="bg-[#181818] border border-gray-800 rounded p-8 text-center text-gray-300">
+                No selected products yet.
+            </div>
+        @endforelse
     </div>
 
     <hr class="border-gray-700 my-6">
 
-    <!-- Voucher + Invoice -->
-    <div class="grid grid-cols-2 gap-6 text-xs">
-
-        <!-- Left -->
-        <div>
-            <div class="mb-2">E-Invoice Request Now</div>
-            <input type="text" placeholder="0000-0000-0000"
-                   class="bg-[#2a2a2a] border border-gray-600 px-2 py-1 rounded w-full text-xs">
+    <div class="grid md:grid-cols-2 gap-6 text-xs">
+        <div class="bg-[#181818] border border-gray-800 rounded-lg p-4">
+            <div class="font-semibold mb-1">Payment Method</div>
+            <div class="text-gray-300">Cash on Delivery (COD)</div>
         </div>
 
-        <!-- Right -->
         <div class="text-right">
-            <button class="bg-gray-700 px-3 py-1 rounded mb-2 text-[10px]">
-                Select Voucher
+            <div class="text-gray-400 text-xs">Order Total ({{ $products->count() }} items):</div>
+            <div class="ml-2 text-2xl font-semibold">Php {{ number_format($total, 2) }}</div>
+        </div>
+    </div>
+
+    <div class="flex justify-end mt-6">
+        @if ($canEdit)
+            <button form="checkoutForm" type="submit" @disabled($products->isEmpty()) class="bg-white text-black px-8 py-3 rounded-lg font-bold hover:bg-gray-200 disabled:opacity-40">
+                Place COD Order
             </button>
-
-            <div class="text-gray-400 text-[10px]">CHANGE</div>
-            <div>₱ 525</div>
-        </div>
-
+        @else
+            <form method="POST" action="/checkout">
+                @csrf
+                <button type="submit" @disabled($products->isEmpty()) class="bg-white text-black px-8 py-3 rounded-lg font-bold hover:bg-gray-200 disabled:opacity-40">
+                    Place COD Order
+                </button>
+            </form>
+        @endif
     </div>
-
-    <!-- Shipping -->
-    <div class="mt-6 text-xs text-gray-300">
-        <div class="font-semibold">Overseas Shipping</div>
-        <div>Standard delivery fee</div>
-        <div class="text-gray-500 text-[10px]">
-            Estimated shipping: Apr 29 - May 7
-        </div>
-    </div>
-
-    <!-- Guarantee -->
-    <div class="text-green-400 text-xs mt-4">
-        Guaranteed to get by 25 - 27 Apr
-    </div>
-
-    <!-- Total -->
-    <div class="flex justify-end mt-6 text-sm">
-        <div>
-            <span class="text-gray-400 text-xs">Order Total (7 items):</span>
-            <span class="ml-2 text-lg font-semibold">42,313</span>
-        </div>
-    </div>
-
 </div>
 
-</x-layouts>
+</x-layout>

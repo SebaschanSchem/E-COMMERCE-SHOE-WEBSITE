@@ -9,7 +9,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title }}</title>
-
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
 <body class="bg-black text-white font-sans min-h-screen">
@@ -25,24 +25,25 @@
     <!-- LINKS -->
     <div class="flex gap-8 text-sm text-gray-300">
         <a href="/home" class="hover:text-white transition">HOME</a>
-        <a href="/product" class="hover:text-white transition">PRODUCT</a>
-        <a href="/purchase" class="hover:text-white transition">PURCHASE</a>
+        <a href="/products" class="hover:text-white transition">PRODUCT</a>
+        <a href="/cart" class="hover:text-white transition">CART</a>
     </div>
 
     <!-- USER -->
     <div class="flex items-center gap-4 text-sm">
         <div class="flex items-center gap-3">
 
-            <a href="/addtocart">
+            <a href="/cart">
     <img src="{{ asset('img/shopping-cart.png') }}" alt="cart"
          class="w-6 h-6 opacity-80 cursor-pointer">
 </a>
 
-            <a href="/login">
-    <button class="bg-white text-black px-3 py-1 rounded hover:bg-gray-200 transition">
+            <form method="POST" action="/logout">
+                @csrf
+    <button type="submit" class="bg-white text-black px-3 py-1 rounded hover:bg-gray-200 transition">
         LOG OUT
     </button>
-</a>
+</form>
 
         </div>
     </div>

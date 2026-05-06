@@ -1,5 +1,16 @@
 <x-layout title="Home | E-COMMERCE-SHOE-WEBSITE">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @keyframes shoe-walk {
+            0%, 100% { transform: translateX(-18px) translateY(0) rotate(-1deg); }
+            25% { transform: translateX(-6px) translateY(-10px) rotate(1deg); }
+            50% { transform: translateX(10px) translateY(0) rotate(-1deg); }
+            75% { transform: translateX(22px) translateY(-8px) rotate(1deg); }
+        }
+
+        .shoe-walk {
+            animation: shoe-walk 2.4s ease-in-out infinite;
+        }
+    </style>
 
 <!-- HERO SECTION -->
 <section class="bg-white text-black">
@@ -9,12 +20,44 @@
         <!-- BIG SHOE IMAGE -->
         <div class="relative flex justify-center">
             <img src="https://ronashoes.com/cdn/shop/collections/Rona-Shoes---Luna-Black.jpg?v=1704060625"
-                 class="w-full max-h-[500px] object-contain">
+                 class="w-full max-h-[500px] object-contain shoe-walk">
            
         </div>
 
     </div>
 
+</section>
+
+<!-- FEATURED SHOES -->
+<section class="bg-[#111] py-12 px-6 text-white">
+    <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold text-center mb-8 tracking-wide">FEATURED SHOES</h2>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            @forelse ($featuredProducts as $product)
+                @php
+                    $image = str_starts_with($product->image, 'http') ? $product->image : asset($product->image);
+                @endphp
+
+                <a href="/purchase/{{ $product->id }}" class="group bg-black border border-gray-800 rounded-lg p-4 hover:border-white/50 transition">
+                    <div class="bg-white h-56 rounded-md flex items-center justify-center overflow-hidden mb-4">
+                        <img src="{{ $image }}" alt="{{ $product->name }}" class="w-full h-full object-contain group-hover:scale-105 transition">
+                    </div>
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <h3 class="font-bold">{{ $product->name }}</h3>
+                            <p class="text-xs uppercase tracking-widest text-gray-400">{{ $product->category }}</p>
+                        </div>
+                        <p class="font-bold">Php {{ number_format($product->price, 2) }}</p>
+                    </div>
+                </a>
+            @empty
+                <div class="lg:col-span-3 text-center text-gray-300">
+                    Run migrations and seeders to show featured shoes here.
+                </div>
+            @endforelse
+        </div>
+    </div>
 </section>
 
 
@@ -122,4 +165,4 @@
 
 </section>
 
-</x-layouts>
+</x-layout>

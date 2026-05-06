@@ -13,7 +13,7 @@
 
         <!-- Logo -->
         <div class="mb-8">
-            <img src="{{ asset('img/logo.png') }}" 
+            <img src="{{ asset('img/logo.png') }}"
                  alt="Sapatosan Logo"
                  class="w-54 md:w-42 mb-3 rounded-[10px] drop-shadow-xl">
         </div>
@@ -33,38 +33,48 @@
         </div>
 
         <!-- Login Box -->
-        <div class="w-full max-w-md p-8 rounded-3xl bg-white/10 border border-white/10 shadow-2xl backdrop-blur-md">
+        <form method="POST" action="/login" class="w-full max-w-md p-8 rounded-3xl bg-white/10 border border-white/10 shadow-2xl backdrop-blur-md">
+            @csrf
 
             <h2 class="text-2xl font-bold mb-6">Sign In</h2>
 
+            @if ($errors->has('login'))
+                <div class="mb-4 rounded-xl bg-red-500/20 border border-red-300/30 px-4 py-3 text-sm text-red-100">
+                    {{ $errors->first('login') }}
+                </div>
+            @endif
+
             <input type="text"
-                placeholder="Use @example.com"
+                name="username"
+                value="{{ old('username') }}"
+                placeholder="Username"
                 class="w-full mb-4 px-4 py-3 bg-black/60 border border-white/10 rounded-xl focus:outline-none focus:border-amber-400 transition">
 
             <input type="password"
-                placeholder="ex. ******"
+                name="password"
+                placeholder="Password"
                 class="w-full mb-6 px-4 py-3 bg-black/60 border border-white/10 rounded-xl focus:outline-none focus:border-amber-400 transition">
 
-            <button class="w-full bg-amber-400 text-black py-3 rounded-xl font-bold hover:bg-amber-300 transition">
+            <button type="submit" class="w-full bg-amber-400 text-black py-3 rounded-xl font-bold hover:bg-amber-300 transition">
                 Sign In
             </button>
 
-            <p class="mt-4 text-sm text-blue-200/70 hover:text-white cursor-pointer">
-                Forgot password?
+            <p class="mt-4 text-sm text-blue-200/70">
+                Use user / 123 or admin / 123
             </p>
 
-        </div>
+        </form>
 
         <!-- Footer -->
          <h1>FOLLOW US ON:</h1>
         <div class="mt-10 flex gap-6 text-blue-200/70">
-            <img src="{{ asset('img/yt.png') }}" 
+            <img src="{{ asset('img/yt.png') }}"
              alt="YouTube"
              class="w-32 h-32 hover:scale-110 transition cursor-pointer">
-            <img src="{{ asset('img/ig.png') }}" 
+            <img src="{{ asset('img/ig.png') }}"
              alt="IG"
              class="w-32 h-32 hover:scale-110 transition cursor-pointer">
-            <img src="{{ asset('img/x.png') }}" 
+            <img src="{{ asset('img/x.png') }}"
              alt="X"
              class="w-32 h-32 hover:scale-110 transition cursor-pointer">
         </div>

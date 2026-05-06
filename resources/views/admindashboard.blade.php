@@ -1,136 +1,92 @@
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-    <div class="min-h-screen bg-[#13132a] font-sans flex flex-col">
-
-        <!-- ─── TOP NAVBAR ─────────────────────────────────────────────── -->
-        <header class="flex items-center justify-between px-5 py-3 bg-[#22223b] border-b border-[#33335a]">
-
-            <!-- Brand -->
-            <div class="flex items-center gap-3 round ">
-        <img src="{{ asset('img/logo.png') }}" class="w-28 rounded-[10px]">
-    </div>
-
-            <!-- Right side -->
-            <div class="flex items-center gap-4">
-
-                <!-- Search -->
-                <div class="relative hidden sm:flex items-center">
-                    <input type="text" placeholder="Search"
-                        class="bg-[#2a2a45] border border-[#33335a] text-sm text-white/70 placeholder-white/30 rounded-lg px-3 py-1.5 pr-8 w-40 focus:outline-none focus:border-indigo-400 transition" />
-                    <svg class="absolute right-2.5 w-3.5 h-3.5 text-white/30" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
-                    </svg>
-                </div>
-                
-                <!-- User dropdown -->
-                <div class="relative group">
-                    <button class="flex items-center gap-2 text-sm text-white/70 hover:text-white transition">
-                        <div class="w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold text-white">U</div>
-                    </button>
-
-            </div>
-        </header>
-
-        <!-- ─── BODY ───────────────────────────────────────────────────── -->
-        <div class="flex flex-1">
-
-            <!-- ─── SIDEBAR ────────────────────────────────────────────── -->
-            <aside class="w-52 shrink-0 bg-[#22223b] border-r border-[#33335a] flex flex-col py-4">
-
-                <nav class="flex flex-col gap-1 px-2">
-
-                    <a href="/admindashboard" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-indigo-300 bg-indigo-500/10 border-l-2 border-indigo-500 transition">
-                        <div class="flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 0 0 1 1h3m10-11l2 2m-2-2v10a1 1 0 0 1-1 1h-3m-4 0h4"/>
-                            </svg>
-                            Home
-                        </div>
-                        <svg class="w-3.5 h-3.5 text-white/20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-
-                    <a href="/adminproduct" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm text-white/50 hover:bg-white/5 hover:text-white transition">
-                        <div class="flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2m14 0V9a2 2 0 0 0-2-2M5 11V9a2 2 0 0 1 2-2m0 0h10M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/>
-                            </svg>
-                        Product
-                        </div>
-                        <svg class="w-3.5 h-3.5 text-white/20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-
-                    <a href="/" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm text-white/50 hover:bg-white/5 hover:text-white transition">
-                        <div class="flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/>
-                            </svg>
-                            Log Out
-                        </div>
-                        <svg class="w-3.5 h-3.5 text-white/20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>             
-                </nav>
-
-            </aside>
-
-            <!-- ─── MAIN CONTENT ───────────────────────────────────────── -->
-            <main class="flex-1 p-6 space-y-6 overflow-y-auto">
-
-                <!-- Welcome + Inbox -->
-                <div class="grid md:grid-cols-2 gap-5">
-
-                    <!-- Welcome Card -->
-                    <div class="bg-[#22223b] border border-[#33335a] rounded-2xl p-6">
-                        <p class="text-indigo-400 text-sm font-medium tracking-widest uppercase mb-1">Welcome</p>
-                        <h1 class="text-white text-4xl font-bold font-mono">Dash</h1>
-                        <p class="text-indigo-400 text-lg font-mono mt-1">01:51</p>
-                    </div>
-
-                    <!-- Inbox Card -->
-                    <div class="bg-[#22223b] border border-[#33335a] rounded-2xl p-6">
-                        <p class="text-white/50 text-sm font-medium tracking-widest uppercase mb-1">Inbox</p>
-                        <h2 class="text-white text-5xl font-bold font-mono">23</h2>
-                        <p class="text-white/30 text-xs mt-1 mb-4">unread messages</p>
-                        <button class="bg-indigo-500 hover:bg-indigo-400 transition text-white text-xs font-semibold px-4 py-2 rounded-lg">
-                            See message
-                        </button>
-                    </div>
-
-                </div>
-
-                <!-- Stats Cards -->
-                <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
-
-                    <!-- Stats Card 1 -->
-                    <div class="bg-[#22223b] border border-[#33335a] hover:border-indigo-500/50 rounded-2xl p-6 transition">
-                        <p class="text-white/40 text-xs font-medium uppercase tracking-wide mb-4">Stats Card 1</p>
-                        <p class="text-white text-3xl font-bold font-mono">84%</p>
-                        <p class="text-white/30 text-xs mt-1">User engagement rate</p>
-                    </div>
-
-                    <!-- Stats Card 2 -->
-                    <div class="bg-[#22223b] border border-[#33335a] hover:border-indigo-500/50 rounded-2xl p-6 transition">
-                        <p class="text-white/40 text-xs font-medium uppercase tracking-wide mb-4">Stats Card 2</p>
-                        <p class="text-white text-3xl font-bold font-mono">1,294</p>
-                        <p class="text-white/30 text-xs mt-1">Total active sessions</p>
-                    </div>
-
-                    <!-- Stats Card 3 -->
-                    <div class="bg-[#22223b] border border-[#33335a] hover:border-indigo-500/50 rounded-2xl p-6 transition">
-                        <p class="text-white/40 text-xs font-medium uppercase tracking-wide mb-4">Stats Card 3</p>
-                        <p class="text-white text-3xl font-bold font-mono">$4.7k</p>
-                        <p class="text-white/30 text-xs mt-1">Revenue this week</p>
-                    </div>
-
-                </div>
-
-            </main>
-
+<div class="min-h-screen bg-[#13132a] font-sans flex flex-col text-white">
+    <header class="flex items-center justify-between px-5 py-3 bg-[#22223b] border-b border-[#33335a]">
+        <div class="flex items-center gap-3">
+            <img src="{{ asset('img/logo.png') }}" class="w-28 rounded-[10px]">
         </div>
+        <form method="POST" action="/logout">
+            @csrf
+            <button type="submit" class="text-sm text-white/70 hover:text-white transition">Log Out</button>
+        </form>
+    </header>
 
+    <div class="flex flex-1">
+        <aside class="w-52 shrink-0 bg-[#22223b] border-r border-[#33335a] flex flex-col py-4">
+            <nav class="flex flex-col gap-1 px-2">
+                <a href="/admin/dashboard" class="px-3 py-2.5 rounded-lg text-sm font-medium text-indigo-300 bg-indigo-500/10 border-l-2 border-indigo-500 transition">Dashboard</a>
+                <a href="/admin/products" class="px-3 py-2.5 rounded-lg text-sm text-white/50 hover:bg-white/5 hover:text-white transition">Product</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-6 space-y-6 overflow-y-auto">
+            <div class="grid md:grid-cols-3 gap-5">
+                <div class="bg-[#22223b] border border-[#33335a] rounded-2xl p-6">
+                    <p class="text-indigo-400 text-sm font-medium tracking-widest uppercase mb-1">Purchased Products</p>
+                    <h1 class="text-white text-4xl font-bold font-mono">{{ $purchases->sum(fn ($purchase) => $purchase->items->count()) }}</h1>
+                </div>
+
+                <div class="bg-[#22223b] border border-[#33335a] rounded-2xl p-6">
+                    <p class="text-white/50 text-sm font-medium tracking-widest uppercase mb-1">Total Orders</p>
+                    <h2 class="text-white text-4xl font-bold font-mono">{{ $purchases->count() }}</h2>
+                </div>
+
+                <div class="bg-[#22223b] border border-[#33335a] rounded-2xl p-6">
+                    <p class="text-white/50 text-sm font-medium tracking-widest uppercase mb-1">Total Sales</p>
+                    <h2 class="text-white text-3xl font-bold font-mono">Php {{ number_format($purchases->sum(fn ($purchase) => (float) $purchase->total_price), 2) }}</h2>
+                </div>
+            </div>
+
+            <section class="bg-[#22223b] border border-[#33335a] rounded-2xl p-6">
+                <h2 class="text-lg font-bold mb-4">Purchased Products</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="text-white/40 uppercase text-xs">
+                            <tr>
+                                <th class="text-left py-2">Order</th>
+                                <th class="text-left py-2">Customer</th>
+                                <th class="text-left py-2">Products</th>
+                                <th class="text-left py-2">Payment</th>
+                                <th class="text-right py-2">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#33335a]">
+                            @forelse ($purchases as $purchase)
+                                <tr>
+                                    <td class="py-3">#{{ $purchase->id }}</td>
+                                    <td class="py-3">{{ $purchase->full_name }}</td>
+                                    <td class="py-3">
+                                        {{ $purchase->items->pluck('product_name')->join(', ') }}
+                                    </td>
+                                    <td class="py-3">{{ $purchase->payment_method }}</td>
+                                    <td class="py-3 text-right">Php {{ number_format($purchase->total_price, 2) }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="py-6 text-center text-white/50">No purchases yet.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="bg-[#22223b] border border-[#33335a] rounded-2xl p-6">
+                <h2 class="text-lg font-bold mb-4">Stock Levels</h2>
+                <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    @foreach ($products as $product)
+                        <div class="bg-[#2a2a45] border border-[#33335a] rounded-xl p-4">
+                            <div class="flex justify-between gap-4">
+                                <div>
+                                    <p class="font-semibold">{{ $product->name }}</p>
+                                    <p class="text-xs text-white/40 capitalize">{{ $product->category }}</p>
+                                </div>
+                                <p class="text-2xl font-bold {{ $product->stock <= 3 ? 'text-red-300' : 'text-indigo-300' }}">{{ $product->stock }}</p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+        </main>
     </div>
+</div>
