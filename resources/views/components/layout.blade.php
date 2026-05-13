@@ -26,10 +26,8 @@
     <div class="flex gap-8 text-sm text-gray-300">
         <a href="/home" class="hover:text-white transition">HOME</a>
         <a href="/products" class="hover:text-white transition">PRODUCT</a>
-        <a href="/cart" class="hover:text-white transition">CART</a>
     </div>
 
-    <!-- USER -->
     <div class="flex items-center gap-4 text-sm">
         <div class="flex items-center gap-3">
 

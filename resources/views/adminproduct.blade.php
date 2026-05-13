@@ -93,7 +93,7 @@
                                 </label>
 
                                 <div class="flex gap-2">
-                                    <button type="submit" class="flex-1 bg-white text-black rounded-lg py-2 text-sm font-bold hover:bg-gray-200">Edit</button>
+                                    <button type="submit" class="flex-1 bg-white text-black rounded-lg py-2 text-sm font-bold hover:bg-gray-200">UPDATE</button>
                                 </div>
                             </form>
 
@@ -101,7 +101,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="w-full border border-red-300/40 text-red-200 rounded-lg py-2 text-sm hover:bg-red-500 hover:text-white transition">
-                                    Delete
+                                    DELETE
                                 </button>
                             </form>
                         </div>

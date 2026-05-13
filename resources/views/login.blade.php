@@ -1,24 +1,20 @@
 <div class="relative min-h-screen flex items-center justify-center overflow-hidden text-white">
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-    <!-- Background -->
     <div class="absolute inset-0">
         <img src="https://i.pinimg.com/736x/eb/4a/aa/eb4aaa9a05a655b7d806159008ff42c5.jpg"
              class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-gradient-to-br from-black/80 via-black/70 to-black/90"></div>
     </div>
 
-    <!-- Main Content -->
     <div class="relative z-10 flex flex-col items-center px-6 text-center">
 
-        <!-- Logo -->
         <div class="mb-8">
             <img src="{{ asset('img/logo.png') }}"
                  alt="Sapatosan Logo"
                  class="w-54 md:w-42 mb-3 rounded-[10px] drop-shadow-xl">
         </div>
 
-        <!-- Images Row -->
         <div class="flex flex-wrap justify-center gap-6 mb-10">
 
         <img src="https://mir-s3-cdn-cf.behance.net/project_modules/fs/eaa5ef128327031.61540e7a31630.jpg"
@@ -32,7 +28,6 @@
 
         </div>
 
-        <!-- Login Box -->
         <form method="POST" action="/login" class="w-full max-w-md p-8 rounded-3xl bg-white/10 border border-white/10 shadow-2xl backdrop-blur-md">
             @csrf
 
@@ -59,13 +54,8 @@
                 Sign In
             </button>
 
-            <p class="mt-4 text-sm text-blue-200/70">
-                Use user / 123 or admin / 123
-            </p>
-
         </form>
 
-        <!-- Footer -->
          <h1>FOLLOW US ON:</h1>
         <div class="mt-10 flex gap-6 text-blue-200/70">
             <img src="{{ asset('img/yt.png') }}"

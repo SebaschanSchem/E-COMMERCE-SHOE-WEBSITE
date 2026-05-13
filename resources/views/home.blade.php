@@ -1,23 +1,44 @@
 <x-layout title="Home | E-COMMERCE-SHOE-WEBSITE">
-    <style>
-        @keyframes shoe-walk {
-            0%, 100% { transform: translateX(-18px) translateY(0) rotate(-1deg); }
-            25% { transform: translateX(-6px) translateY(-10px) rotate(1deg); }
-            50% { transform: translateX(10px) translateY(0) rotate(-1deg); }
-            75% { transform: translateX(22px) translateY(-8px) rotate(1deg); }
+<style>
+    @keyframes shoe-walk {
+        0% {
+            transform: translateX(0) translateY(0) rotate(0deg);
         }
 
-        .shoe-walk {
-            animation: shoe-walk 2.4s ease-in-out infinite;
+        15% {
+            transform: translateX(8px) translateY(6px) rotate(-2deg); /* step down (impact) */
         }
-    </style>
 
-<!-- HERO SECTION -->
+        30% {
+            transform: translateX(16px) translateY(0px) rotate(2deg); /* push forward + lift */
+        }
+
+        45% {
+            transform: translateX(24px) translateY(5px) rotate(-1deg); /* next step down */
+        }
+
+        60% {
+            transform: translateX(32px) translateY(0px) rotate(2deg); /* lift again */
+        }
+
+        75% {
+            transform: translateX(20px) translateY(3px) rotate(-1deg); /* slight backward recovery */
+        }
+
+        100% {
+            transform: translateX(0) translateY(0) rotate(0deg); /* reset smoothly */
+        }
+    }
+
+    .shoe-walk {
+        animation: shoe-walk 2.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    }
+</style>
+
 <section class="bg-white text-black">
 
     <div class="max-w-6xl mx-auto py-10 px-6">
 
-        <!-- BIG SHOE IMAGE -->
         <div class="relative flex justify-center">
             <img src="https://ronashoes.com/cdn/shop/collections/Rona-Shoes---Luna-Black.jpg?v=1704060625"
                  class="w-full max-h-[500px] object-contain shoe-walk">
@@ -28,10 +49,9 @@
 
 </section>
 
-<!-- FEATURED SHOES -->
 <section class="bg-[#111] py-12 px-6 text-white">
     <div class="max-w-6xl mx-auto">
-        <h2 class="text-3xl font-bold text-center mb-8 tracking-wide">FEATURED SHOES</h2>
+        <h2 class="text-3xl font-bold text-center mb-8 tracking-wide">AVAILABLE PRODUCTS</h2>
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse ($featuredProducts as $product)
@@ -53,7 +73,7 @@
                 </a>
             @empty
                 <div class="lg:col-span-3 text-center text-gray-300">
-                    Run migrations and seeders to show featured shoes here.
+                    NO PRODUCTS AVAILABLE!!
                 </div>
             @endforelse
         </div>
@@ -61,7 +81,6 @@
 </section>
 
 
-<!-- TRENDING -->
 <section class="bg-[url('/img/bgforhome.jpg')] bg-center py-14 px-6 text-white">
 
     <div class="max-w-6xl mx-auto">
@@ -71,13 +90,11 @@
 
         <div class="grid md:grid-cols-2 gap-10 items-center">
 
-            <!-- IMAGE -->
             <div class="bg-white p-4 rounded-xl">
                 <img src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/shoe-poster-design-template-4166448a83bcad7c01288993606a0049_screen.jpg?ts=1719595955"
                      class="w-full rounded-lg">
             </div>
 
-            <!-- TEXT -->
             <div>
                 <h3 class="text-2xl font-bold mb-4">NIKE SAPATOSAN</h3>
 
@@ -93,20 +110,18 @@
     </div>
 
     <br>
-    <h2 class="text-3xl font-bold text-center mb-8 tracking-wide">FEATURES</h2>
+    <h2 class="text-3xl font-bold text-center mb-8 tracking-wide">LAYOUT</h2>
     <br>
 
     <div class="max-w-6xl mx-auto">
 
         <div class="grid md:grid-cols-2 gap-10 items-center">
 
-            <!-- IMAGE -->
             <div class="bg-white p-4 rounded-xl">
                 <img src="https://feetfirstclinic.com/wp-content/uploads/runningshoes1.jpg.webp"
                      class="w-full rounded-lg">
             </div>
 
-            <!-- TEXT -->
             <div>
                 <h3 class="text-2xl font-bold mb-4">HOW IT MADE</h3>
 
@@ -128,13 +143,11 @@
 
 <div class="flex justify-center items-center gap-16">
 
-    <!-- ONLINE -->
     <div class="flex flex-col items-center">
         <img src="{{ asset('img/online.png') }}" class="w-full h-auto object-contain rounded-[10px]">
         <h3 class="mt-3 text-lg font-semibold">ONLINE</h3>
     </div>
 
-    <!-- STORE -->
     <div class="flex flex-col items-center">
         <img src="{{ asset('img/store.png') }}" class="w-full h-auto object-contain rounded-[10px]">
         <h3 class="mt-3 text-lg font-semibold">STORE</h3>
