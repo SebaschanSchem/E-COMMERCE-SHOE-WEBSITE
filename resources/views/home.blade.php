@@ -1,49 +1,14 @@
 <x-layout title="Home | E-COMMERCE-SHOE-WEBSITE">
-<style>
-    @keyframes shoe-walk {
-        0% {
-            transform: translateX(0) translateY(0) rotate(0deg);
-        }
-
-        15% {
-            transform: translateX(8px) translateY(6px) rotate(-2deg); /* step down (impact) */
-        }
-
-        30% {
-            transform: translateX(16px) translateY(0px) rotate(2deg); /* push forward + lift */
-        }
-
-        45% {
-            transform: translateX(24px) translateY(5px) rotate(-1deg); /* next step down */
-        }
-
-        60% {
-            transform: translateX(32px) translateY(0px) rotate(2deg); /* lift again */
-        }
-
-        75% {
-            transform: translateX(20px) translateY(3px) rotate(-1deg); /* slight backward recovery */
-        }
-
-        100% {
-            transform: translateX(0) translateY(0) rotate(0deg); /* reset smoothly */
-        }
-    }
-
-    .shoe-walk {
-        animation: shoe-walk 2.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-    }
-</style>
 
 <section class="bg-white text-black">
 
     <div class="max-w-6xl mx-auto py-10 px-6">
 
         <div class="relative flex justify-center">
-            <img src="https://ronashoes.com/cdn/shop/collections/Rona-Shoes---Luna-Black.jpg?v=1704060625"
-                 class="w-full max-h-[500px] object-contain shoe-walk">
-           
-        </div>
+    <div id="shoe-container"
+         class="w-full h-[500px]">
+    </div>
+</div>
 
     </div>
 
