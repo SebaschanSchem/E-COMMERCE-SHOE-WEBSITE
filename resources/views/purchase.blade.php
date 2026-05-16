@@ -1,93 +1,171 @@
 <x-layout title="Purchase | E-COMMERCE-SHOE-WEBSITE">
 
+<div class="min-h-screen bg-white text-black">
+
 @php
     $image = str_starts_with($product->image, 'http') ? $product->image : asset($product->image);
 @endphp
 
-<div class="p-8 max-w-6xl mx-auto">
-    <!-- Top Section -->
+<div class="min-h-screen bg-white text-black p-8 max-w-6xl mx-auto">
+
+@if(session('status'))
+    <div 
+        id="toast-notification"
+        class="fixed top-1/2 left-1/2 z-50
+               -translate-x-1/2 -translate-y-1/2
+               w-[340px] max-w-[90%]
+               rounded-xl bg-green-500 text-white font-bold
+               px-5 py-4 text-sm text-center
+               shadow-2xl
+               opacity-0 scale-95
+               transition-all duration-500 ease-in-out">
+
+         {{ session('status') }}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toast = document.getElementById("toast-notification");
+
+            setTimeout(() => {
+                toast.classList.remove("opacity-0", "scale-95");
+                toast.classList.add("opacity-100", "scale-100");
+            }, 100);
+
+            setTimeout(() => {
+                toast.classList.remove("opacity-100", "scale-100");
+                toast.classList.add("opacity-0", "scale-95");
+
+                setTimeout(() => toast.remove(), 500);
+            }, 2000);
+        });
+    </script>
+@endif
+
+    <!-- TOP SECTION -->
     <div class="grid md:grid-cols-2 gap-8">
-        <!-- Product Image -->
-        <div class="bg-gray-200 h-[360px] flex items-center justify-center p-4 rounded-lg">
+
+        <!-- PRODUCT IMAGE -->
+        <div class="bg-white border border-gray-200 h-[360px] flex items-center justify-center p-4 rounded-lg">
             <img src="{{ $image }}" alt="{{ $product->name }}" class="max-h-full max-w-full object-contain">
         </div>
 
-        <!-- Product Info -->
+        <!-- PRODUCT INFO -->
         <div class="flex flex-col gap-4">
+
             <div class="flex justify-between items-start gap-4">
-                <h1 class="text-2xl font-semibold leading-tight">
+
+                <h1 class="text-2xl font-semibold leading-tight text-black">
                     {{ $product->name }}<br>
-                    <span class="font-normal text-gray-300 text-sm capitalize">{{ $product->category }}</span>
+                    <span class="font-normal text-gray-500 text-sm capitalize">
+                        {{ $product->category }}
+                    </span>
                 </h1>
 
                 <form method="POST" action="/cart/{{ $product->id }}">
                     @csrf
-                    <button type="submit" class="border rounded-full w-10 h-10 flex items-center justify-center hover:bg-white hover:text-black text-pink-200" title="Add to cart">
-                        &#9829;
+                    <button type="submit"
+                        class="border border-gray-300 rounded-full w-10 h-10 flex items-center justify-center hover:bg-black hover:text-white transition text-black"
+                        title="Add to cart">
+                        ♥
                     </button>
                 </form>
+
             </div>
 
-            <div class="text-2xl font-bold">Php {{ number_format($product->price, 2) }}</div>
-            <div class="text-sm text-gray-400">Stock available: {{ $product->stock }}</div>
+            <div class="text-2xl font-bold text-black">
+                ₱{{ number_format($product->price, 2) }}
+            </div>
 
-            <!-- Dropdowns -->
+            <div class="text-sm text-gray-500">
+                Stock available: {{ $product->stock }}
+            </div>
+
+            <!-- DROPDOWNS -->
             <div class="grid grid-cols-2 gap-4 text-sm">
+
                 <div>
-                    <label class="block mb-1 text-gray-400">SIZE</label>
-                    <select class="w-full bg-[#2a2a2a] border border-gray-600 p-2 rounded">
-                        <option>41-42</option>
-                        <option>42-43</option>
-                        <option>43-44</option>
+                    <label class="block mb-1 text-gray-600">SIZE</label>
+                    <select class="w-full bg-white border border-gray-300 p-2 rounded text-black">
+                        <option value="41-42">41-42</option>
+                        <option value="42-43">42-43</option>
+                        <option value="43-44">43-44</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block mb-1 text-gray-400">PAYMENT</label>
-                    <select class="w-full bg-[#2a2a2a] border border-gray-600 p-2 rounded">
-                        <option>COD</option>
-                    </select>
+                    <label class="block mb-1 text-gray-600">PAYMENT</label>
+                    <div class="w-full bg-white border border-gray-300 p-2 rounded text-black">
+                        <h1>Cash on Delivery (COD)</h1>
+                    </div>
                 </div>
+
             </div>
 
-            <!-- Description -->
-            <div class="border border-gray-700 rounded p-4 text-sm">
-                <div class="font-semibold mb-2">{{ $product->name }}</div>
-                <p class="text-gray-400 text-xs leading-relaxed">
+            <!-- DESCRIPTION -->
+            <div class="border border-gray-200 rounded p-4 text-sm bg-white">
+
+                <div class="font-semibold mb-2 text-black">
+                    {{ $product->name }}
+                </div>
+
+                <p class="text-gray-600 text-xs leading-relaxed">
                     These shoes are selected for comfort, style, and everyday wear. The uploaded product image is displayed directly from the saved product record.
                 </p>
 
                 <div class="mt-4 grid sm:grid-cols-2 gap-3">
+
                     <form method="POST" action="/cart/{{ $product->id }}">
                         @csrf
-                        <button type="submit" class="w-full bg-gray-300 text-black py-2 rounded text-xs font-bold">
+                        <button type="submit"
+                            class="w-full bg-black text-white py-2 rounded text-xs font-bold hover:bg-gray-800">
                             ADD TO CART
                         </button>
                     </form>
 
-                    <a href="/checkout" class="w-full bg-white text-black py-2 rounded text-xs font-bold text-center">
+                    <a href="/checkout"
+                        class="w-full bg-white border border-black text-black py-2 rounded text-xs font-bold text-center hover:bg-gray-400">
                         PURCHASE
                     </a>
+
                 </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Reviews Section -->
+    <!-- REVIEWS -->
     <div class="mt-16">
-        <h2 class="text-sm mb-4">Latest reviews</h2>
+
+        <h2 class="text-sm mb-4 text-black">Latest reviews</h2>
 
         <div class="grid md:grid-cols-3 gap-6">
+
             @for ($i = 0; $i < 3; $i++)
-            <div class="border border-gray-700 rounded p-4 text-xs">
-                <div class="mb-2 text-gray-400">*****</div>
-                <div class="font-semibold text-sm mb-1">{{ $product->name }}</div>
-                <div class="text-gray-400 mb-2">GOOD QUALITY!!</div>
-                <div class="text-gray-500 text-[10px]">5/6/26</div>
-            </div>
+                <div class="border border-gray-200 rounded p-4 text-xs bg-white">
+
+                    <div class="mb-2 text-gray-500">★★★★★</div>
+
+                    <div class="font-semibold text-sm mb-1 text-black">
+                        {{ $product->name }}
+                    </div>
+
+                    <div class="text-gray-600 mb-2">
+                        GOOD QUALITY!!
+                    </div>
+
+                    <div class="text-gray-400 text-[10px]">
+                        5/6/26
+                    </div>
+
+                </div>
             @endfor
+
         </div>
     </div>
+
+</div>
+
 </div>
 
 </x-layout>

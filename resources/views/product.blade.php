@@ -1,12 +1,40 @@
 <x-layout title="Products | E-COMMERCE-SHOE-WEBSITE">
 
-<section class="bg-[url('/img/bgproduct.jpg')] bg-center py-14 px-6 text-white min-h-screen">
+<section class="bg-white py-14 px-6 text-white min-h-screen">
     <div class="relative z-10 max-w-7xl mx-auto">
-        @if (session('status'))
-            <div class="mb-4 rounded-lg bg-green-500/20 border border-green-300/30 px-4 py-3 text-sm">
-                {{ session('status') }}
-            </div>
-        @endif
+       @if(session('status'))
+    <div 
+        id="toast-notification"
+        class="fixed top-1/2 left-1/2 z-50
+               -translate-x-1/2 -translate-y-1/2
+               w-[340px] max-w-[90%]
+               rounded-xl bg-green-500 text-white font-bold
+               px-5 py-4 text-sm text-center
+               shadow-2xl
+               opacity-0 scale-95
+               transition-all duration-500 ease-in-out">
+
+         {{ session('status') }}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toast = document.getElementById("toast-notification");
+
+            setTimeout(() => {
+                toast.classList.remove("opacity-0", "scale-95");
+                toast.classList.add("opacity-100", "scale-100");
+            }, 100);
+
+            setTimeout(() => {
+                toast.classList.remove("opacity-100", "scale-100");
+                toast.classList.add("opacity-0", "scale-95");
+
+                setTimeout(() => toast.remove(), 500);
+            }, 2000);
+        });
+    </script>
+@endif
 
         <form method="GET" action="/products" id="filterForm" class="mb-6 flex flex-col md:flex-row gap-3">
             <input
@@ -14,14 +42,14 @@
                 name="search"
                 value="{{ $search }}"
                 placeholder="Search shoes by name"
-                class="w-full md:max-w-md bg-black/70 border border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-white"
+                class="w-full md:max-w-md bg-black/70 border border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition"
             >
 
             @if ($category)
                 <input type="hidden" name="category" value="{{ $category }}">
             @endif
 
-            <button type="submit" class="bg-white text-black px-6 py-3 rounded-lg text-sm font-bold hover:bg-gray-200 transition">
+            <button type="submit" class="bg-black text-white px-6 py-3 rounded-lg text-sm font-bold hover:bg-gray-700 transition">
                 Search
             </button>
         </form>
@@ -84,7 +112,7 @@
                         </div>
                     @empty
                         <div class="sm:col-span-2 lg:col-span-3 bg-black/70 border border-gray-700 rounded-lg p-8 text-center text-gray-300">
-                            No products match your filters.
+                            No products available.
                         </div>
                     @endforelse
                 </div>

@@ -11,9 +11,14 @@ class PurchaseController extends Controller
 {
     public function show(Request $request, Product $product)
     {
-        $request->session()->put('checkout_product_ids', [$product->id]);
+       $request->session()->put('checkout_product_ids', [$product->id]);
 
-        return view('purchase', compact('product'));
+    // ADDED: save selected size if user picks one
+    if ($request->has('size')) {
+        $request->session()->put('selected_size', $request->size);
+    }
+
+    return view('purchase', compact('product'));
     }
 
     public function checkout(Request $request)
@@ -45,14 +50,14 @@ class PurchaseController extends Controller
         $details = $existingDetails ?: $request->validate([
             'full_name' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string', 'max:1000'],
-            'contact_number' => ['required', 'string', 'max:30'],
+            'contact_number' => ['required', 'regex:/^09\d{9}$/'],
         ]);
 
         if ($request->boolean('allow_update')) {
             $details = $request->validate([
                 'full_name' => ['required', 'string', 'max:255'],
                 'address' => ['required', 'string', 'max:1000'],
-                'contact_number' => ['required', 'string', 'max:30'],
+                'contact_number' => ['required', 'regex:/^09\d{9}$/'],
             ]);
         }
 

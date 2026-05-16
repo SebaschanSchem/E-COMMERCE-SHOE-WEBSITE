@@ -2,8 +2,11 @@
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
     <div class="absolute inset-0">
-        <img src="https://i.pinimg.com/736x/eb/4a/aa/eb4aaa9a05a655b7d806159008ff42c5.jpg"
-             class="w-full h-full object-cover">
+        <video autoplay muted loop playsinline class="w-full h-full object-cover">
+            <source src="{{ asset('img\ssstik.io_@lensrdvisuals_1778698610938.mp4') }}" type="video/mp4">
+                Your browser does not support the video tag.
+        </video>
+
         <div class="absolute inset-0 bg-gradient-to-br from-black/80 via-black/70 to-black/90"></div>
     </div>
 
@@ -12,23 +15,23 @@
         <div class="mb-8">
             <img src="{{ asset('img/logo.png') }}"
                  alt="Sapatosan Logo"
-                 class="w-54 md:w-42 mb-3 rounded-[10px] drop-shadow-xl">
+                 class="w-54 md:w-42 mb-3 rounded-[10px] drop-shadow-xl hover:scale-105 transition">
         </div>
 
         <div class="flex flex-wrap justify-center gap-6 mb-10">
 
         <img src="https://mir-s3-cdn-cf.behance.net/project_modules/fs/eaa5ef128327031.61540e7a31630.jpg"
-            class="w-40 object-contain rounded-[10px]">
+            class="w-40 object-contain rounded-[10px] hover:scale-105 transition">
 
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRQva76HBW34Ok8im3twNYpSAxPs2c_96Ssg&s"
-            class="w-40 object-contain rounded-[10px]">
+            class="w-40 object-contain rounded-[10px] hover:scale-105 transition">
 
         <img src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/sneaker-shoe-poster-design-template-9a8882232bf688b7e9ea3a1978f775e6_screen.jpg?ts=1734163250"
-            class="w-40 object-contain rounded-[10px]">
+            class="w-40 object-contain rounded-[10px] hover:scale-105 transition">
 
         </div>
 
-        <form method="POST" action="/login" class="w-full max-w-md p-8 rounded-3xl bg-white/10 border border-white/10 shadow-2xl backdrop-blur-md">
+        <form method="POST" action="/login" class="w-full max-w-md p-8 rounded-3xl bg-white/10 border border-white/10 shadow-2xl backdrop-blur-md hover:bg-white/20 transition">
             @csrf
 
             <h2 class="text-2xl font-bold mb-6">Sign In</h2>
@@ -39,18 +42,18 @@
                 </div>
             @endif
 
-            <input type="text"
+            <input type="text" required
                 name="username"
                 value="{{ old('username') }}"
                 placeholder="Username"
                 class="w-full mb-4 px-4 py-3 bg-black/60 border border-white/10 rounded-xl focus:outline-none focus:border-amber-400 transition">
 
-            <input type="password"
+            <input type="password" required
                 name="password"
                 placeholder="Password"
                 class="w-full mb-6 px-4 py-3 bg-black/60 border border-white/10 rounded-xl focus:outline-none focus:border-amber-400 transition">
 
-            <button type="submit" class="w-full bg-amber-400 text-black py-3 rounded-xl font-bold hover:bg-amber-300 transition">
+            <button type="submit" class="w-full bg-amber-400 text-black py-3 rounded-xl font-bold hover:bg-amber-500 transition">
                 Sign In
             </button>
 

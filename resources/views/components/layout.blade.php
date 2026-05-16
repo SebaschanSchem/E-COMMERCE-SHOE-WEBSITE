@@ -19,27 +19,46 @@
 <nav class="flex items-center justify-between px-6 py-4 bg-[#111] border-b border-gray-800">
 
     <!-- LOGO -->
-    <div class="flex items-center gap-3 round ">
+    <div class="flex items-center gap-3 round hover:scale-105 transition">
         <img src="{{ asset('img/logo.png') }}" class="w-28 rounded-[10px]">
     </div>
 
     <!-- LINKS -->
     <div class="flex gap-8 text-sm text-gray-300">
-        <a href="/home" class="hover:text-white transition">HOME</a>
-        <a href="/products" class="hover:text-white transition">PRODUCT</a>
-    </div>
+    <a href="/home" class="relative group px-3 py-1 rounded transition duration-300">
+        HOME
+        <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-white transition-all duration-300 ease-in-out group-hover:w-full"></span>
+    </a>
+
+    <a href="/products" class="relative group px-3 py-1 rounded transition duration-300">
+        PRODUCT
+        <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-white transition-all duration-300 ease-in-out group-hover:w-full"></span>
+    </a>
+</div>
 
     <div class="flex items-center gap-4 text-sm">
         <div class="flex items-center gap-3">
 
-            <a href="/cart">
-    <img src="{{ asset('img/shopping-cart.png') }}" alt="cart"
-         class="w-6 h-6 opacity-80 cursor-pointer">
+        <a href="/cart" class="relative inline-block">
+    
+    <img src="{{ asset('img/shopping-cart.png') }}" 
+         alt="cart"
+         class="w-6 h-6 opacity-80 cursor-pointer hover:scale-105 transition duration-300">
+
+    @if(session('cart') && count(session('cart')) > 0)
+        <span class="absolute -top-2 -right-2 
+                     bg-red-500 text-white text-[10px] 
+                     font-bold rounded-full 
+                     w-5 h-5 flex items-center justify-center">
+            {{ count(session('cart')) }}
+        </span>
+    @endif
+
 </a>
 
             <form method="POST" action="/logout">
                 @csrf
-    <button type="submit" class="bg-white text-black px-3 py-1 rounded hover:bg-gray-200 transition">
+    <button type="submit" class="bg-white text-black px-3 py-1 rounded hover:bg-gray-400 transition cursor-pointer font-bold">
         LOG OUT
     </button>
 </form>
