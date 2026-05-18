@@ -8,7 +8,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $featuredProducts = Product::latest()->take(3)->get();
+        $featuredProducts = Product::where('stock', '>', 0)->latest()->take(3)->get();
 
         return view('home', compact('featuredProducts'));
     }

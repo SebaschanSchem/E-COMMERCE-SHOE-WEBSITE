@@ -4,11 +4,43 @@
 <div class="min-h-screen bg-white text-black p-6 max-w-6xl mx-auto">
 
     {{-- STATUS --}}
-    @if (session('status'))
-        <div class="mb-4 rounded-lg bg-gray-100 border border-gray-300 px-4 py-3 text-sm text-black">
-            {{ session('status') }}
-        </div>
-    @endif
+@if (session('status'))
+    <div 
+        id="toast-notification"
+        class="fixed top-1/2 left-1/2 z-50
+               -translate-x-1/2 -translate-y-1/2
+               w-[340px] max-w-[90%]
+               rounded-xl bg-green-500 text-white font-bold
+               px-5 py-4 text-sm text-center
+               shadow-2xl
+               opacity-0 scale-95
+               transition-all duration-500 ease-in-out">
+
+        {{ session('status') }}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toast = document.getElementById("toast-notification");
+
+            // show
+            setTimeout(() => {
+                toast.classList.remove("opacity-0", "scale-95");
+                toast.classList.add("opacity-100", "scale-100");
+            }, 100);
+
+            // hide after 2 seconds
+            setTimeout(() => {
+                toast.classList.remove("opacity-100", "scale-100");
+                toast.classList.add("opacity-0", "scale-95");
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 500);
+            }, 2000);
+        });
+    </script>
+@endif
 
     {{-- DELIVERY ADDRESS --}}
     <div class="mb-6">
@@ -124,7 +156,9 @@
                     <div class="text-xs text-black">
                         <div class="font-semibold">{{ $product->name }}</div>
                         <div class="text-gray-500 capitalize">{{ $product->category }}</div>
-                        <div class="text-gray-400 text-[10px]">SIZE: 42</div>
+                        @if (! empty($selectedSizes[$product->id] ?? $selectedSize))
+                            <div class="text-gray-400 text-[10px]">SIZE: {{ $selectedSizes[$product->id] ?? $selectedSize }}</div>
+                        @endif
                     </div>
 
                 </div>

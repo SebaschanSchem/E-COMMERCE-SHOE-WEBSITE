@@ -93,10 +93,15 @@
 
                                 <div>
                                     <label class="text-xs text-gray-500 uppercase tracking-widest">Size</label>
-                                    <select class="block mt-1 border border-gray-300 rounded px-2 py-1 text-sm bg-white text-black">
-                                        <option>41-42</option>
-                                        <option>43-44</option>
-                                        <option>45-46</option>
+                                    <select
+                                        name="sizes[{{ $product->id }}]"
+                                        form="cartCheckoutForm"
+                                        required
+                                        class="block mt-1 border border-gray-300 rounded px-2 py-1 text-sm bg-white text-black">
+                                        <option value="" disabled {{ empty($selectedSizes[$product->id]) ? 'selected' : '' }}>Choose size</option>
+                                        @foreach (['41', '42', '43', '44'] as $size)
+                                            <option value="{{ $size }}" {{ ($selectedSizes[$product->id] ?? '') === $size ? 'selected' : '' }}>{{ $size }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
 
@@ -134,7 +139,11 @@
                         </span>
                     </div>
 
-                    <form method="POST" action="/cart/purchase-all">
+                    @error('sizes')
+                        <p class="text-xs text-red-500 mb-3 text-center">{{ $message }}</p>
+                    @enderror
+
+                    <form method="POST" action="/cart/purchase-all" id="cartCheckoutForm">
                         @csrf
                         <button
                             @disabled($products->isEmpty())

@@ -2,40 +2,37 @@
 
 <div class="min-h-screen bg-[#0f1117] text-white flex flex-col font-sans">
 
-    {{-- HEADER --}}
-    <header class="flex items-center justify-between px-6 py-4 bg-[#151823] border-b border-white/5">
+    <header class="relative flex items-center justify-between px-6 py-4 bg-[#151823] border-b border-white/5">
 
-        <img src="{{ asset('img/logo.png') }}" class="w-28 rounded-lg">
+    {{-- Logo --}}
+    <img src="{{ asset('img/logo.png') }}" 
+         class="w-28 rounded-lg hover:scale-105 transition">
 
-        <form method="POST" action="/logout">
-            @csrf
-            <button class="text-sm text-white/60 hover:text-white transition bgwhite/10 px-3 py-1 rounded">
-                Log Out
-            </button>
-        </form>
+    {{-- CENTER NAV --}}
+    <nav class="absolute left-1/2 -translate-x-1/2 flex items-center gap-3">
 
-    </header>
+        <a href="/admin/dashboard"
+           class="px-4 py-2 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 transition">
+            Dashboard
+        </a>
 
-    <div class="flex flex-1">
+        <a href="/admin/products"
+           class="px-4 py-2 rounded-lg text-sm bg-white/10 text-white border border-white/10">
+            Products
+        </a>
 
-        {{-- SIDEBAR --}}
-        <aside class="w-56 bg-[#151823] border-r border-white/5 py-4">
+    </nav>
 
-            <nav class="flex flex-col gap-2 px-3">
+    {{-- Logout --}}
+    <form method="POST" action="/logout">
+        @csrf
+        <button type="submit"
+            class="bg-white text-black px-3 py-1 rounded hover:bg-gray-400 transition cursor-pointer font-bold">
+            LOG OUT
+        </button>
+    </form>
 
-                <a href="/admin/dashboard"
-                   class="px-3 py-2 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 transition">
-                    Dashboard
-                </a>
-
-                <a href="/admin/products"
-                   class="px-3 py-2 rounded-lg text-sm bg-white/10 text-white border border-white/10">
-                    Products
-                </a>
-
-            </nav>
-
-        </aside>
+</header>
 
         {{-- MAIN --}}
         <main class="flex-1 p-6 space-y-6 overflow-y-auto">

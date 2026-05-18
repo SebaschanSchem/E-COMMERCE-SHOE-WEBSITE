@@ -81,26 +81,38 @@
                 Stock available: {{ $product->stock }}
             </div>
 
-            <!-- DROPDOWNS -->
-            <div class="grid grid-cols-2 gap-4 text-sm">
+            <form method="GET" action="/checkout" id="purchaseForm">
 
-                <div>
-                    <label class="block mb-1 text-gray-600">SIZE</label>
-                    <select class="w-full bg-white border border-gray-300 p-2 rounded text-black">
-                        <option value="41-42">41-42</option>
-                        <option value="42-43">42-43</option>
-                        <option value="43-44">43-44</option>
-                    </select>
-                </div>
+    <!-- DROPDOWNS -->
+    <div class="grid grid-cols-2 gap-4 text-sm">
 
-                <div>
-                    <label class="block mb-1 text-gray-600">PAYMENT</label>
-                    <div class="w-full bg-white border border-gray-300 p-2 rounded text-black">
-                        <h1>Cash on Delivery (COD)</h1>
-                    </div>
-                </div>
+        <div>
+            <label class="block mb-1 text-gray-600">SIZE</label>
 
+            <select 
+                name="size"
+                class="w-full bg-white border border-gray-300 p-2 rounded text-black"
+                required>
+
+                <option value="" disabled {{ old('size') ? '' : 'selected' }}>Choose size</option>
+                @foreach (['41', '42', '43', '44'] as $size)
+                    <option value="{{ $size }}" {{ old('size') === $size ? 'selected' : '' }}>{{ $size }}</option>
+                @endforeach
+            </select>
+            @error('size')
+                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label class="block mb-1 text-gray-600">PAYMENT</label>
+            <div class="w-full bg-white border border-gray-300 p-2 rounded text-black">
+                <h1>Cash on Delivery (COD)</h1>
             </div>
+        </div>
+
+    </div>
+            </form>
 
             <!-- DESCRIPTION -->
             <div class="border border-gray-200 rounded p-4 text-sm bg-white">
@@ -123,10 +135,11 @@
                         </button>
                     </form>
 
-                    <a href="/checkout"
-                        class="w-full bg-white border border-black text-black py-2 rounded text-xs font-bold text-center hover:bg-gray-400">
-                        PURCHASE
-                    </a>
+                    <button type="submit"
+                form="purchaseForm"
+                class="w-full bg-white border border-black text-black py-2 rounded text-xs font-bold text-center hover:bg-gray-400">
+                PURCHASE
+            </button>
 
                 </div>
 

@@ -9,41 +9,86 @@ use Illuminate\Support\Facades\DB;
 
 class PurchaseController extends Controller
 {
+    private const SHOE_SIZES = ['41', '42', '43', '44'];
+
     public function show(Request $request, Product $product)
     {
-       $request->session()->put('checkout_product_ids', [$product->id]);
+        if ($product->stock <= 0) {
+            return redirect('/products')->with('status', 'This product is out of stock.');
+        }
 
-    // ADDED: save selected size if user picks one
-    if ($request->has('size')) {
-        $request->session()->put('selected_size', $request->size);
-    }
+        $request->session()->put('checkout_product_ids', [$product->id]);
+        $request->session()->put('checkout_source', 'direct');
 
-    return view('purchase', compact('product'));
+        return view('purchase', compact('product'));
     }
 
     public function checkout(Request $request)
     {
+        if ($request->has('size')) {
+            $validated = $request->validate([
+                'size' => ['required', 'in:' . implode(',', self::SHOE_SIZES)],
+            ]);
+
+            $request->session()->put('selected_size', $validated['size']);
+            $checkoutProductIds = $request->session()->get('checkout_product_ids', []);
+
+            if (! empty($checkoutProductIds)) {
+                $request->session()->put('selected_sizes', [
+                    $checkoutProductIds[0] => $validated['size'],
+                ]);
+            }
+        }
+
         $ids = $request->session()->get('checkout_product_ids', []);
+        $isDirectPurchase = $request->session()->get('checkout_source') === 'direct';
 
         if (empty($ids)) {
             $ids = $request->session()->get('cart', []);
         }
 
-        $products = Product::whereIn('id', $ids)->get();
+        $hasSelectedProducts = ! empty($ids);
+        $products = Product::whereIn('id', $ids)
+            ->where('stock', '>', 0)
+            ->get();
+
+        if ($hasSelectedProducts && $products->isEmpty()) {
+            return redirect('/products')->with('status', 'Please select an in-stock product before checkout.');
+        }
+
+        $selectedSize = $request->session()->get('selected_size');
+        $selectedSizes = $request->session()->get('selected_sizes', []);
+
+        if ($isDirectPurchase && ! in_array($selectedSize, self::SHOE_SIZES, true)) {
+            return redirect('/purchase/' . $ids[0])
+                ->withErrors(['size' => 'Please choose a shoe size before purchasing.']);
+        }
+
         $total = $products->sum(fn ($product) => (float) $product->price);
         $checkoutDetails = $request->session()->get('checkout_details');
         $canEdit = $request->boolean('edit') || empty($checkoutDetails);
 
-        return view('cod', compact('products', 'total', 'checkoutDetails', 'canEdit'));
+        return view('cod', compact('products', 'total', 'checkoutDetails', 'canEdit', 'selectedSize', 'selectedSizes'));
     }
 
     public function placeOrder(Request $request)
     {
         $ids = $request->session()->get('checkout_product_ids', $request->session()->get('cart', []));
-        $products = Product::whereIn('id', $ids)->get();
+        $isDirectPurchase = $request->session()->get('checkout_source') === 'direct';
+        $products = Product::whereIn('id', $ids)
+            ->where('stock', '>', 0)
+            ->get();
 
         if ($products->isEmpty()) {
-            return redirect('/products')->with('status', 'Please select products before checkout.');
+            return redirect('/products')->with('status', 'Please select in-stock products before checkout.');
+        }
+
+        $selectedSize = $request->session()->get('selected_size');
+        $selectedSizes = $request->session()->get('selected_sizes', []);
+
+        if ($isDirectPurchase && ! in_array($selectedSize, self::SHOE_SIZES, true)) {
+            return redirect('/purchase/' . $ids[0])
+                ->withErrors(['size' => 'Please choose a shoe size before purchasing.']);
         }
 
         $existingDetails = $request->session()->get('checkout_details');
@@ -61,7 +106,18 @@ class PurchaseController extends Controller
             ]);
         }
 
-        $purchase = DB::transaction(function () use ($products, $details) {
+        $purchase = DB::transaction(function () use ($ids, $details, $selectedSize, $selectedSizes) {
+            $products = Product::whereIn('id', $ids)
+                ->where('stock', '>', 0)
+                ->lockForUpdate()
+                ->get();
+
+            if ($products->isEmpty()) {
+                throw new \Illuminate\Http\Exceptions\HttpResponseException(
+                    redirect('/products')->with('status', 'Selected products are out of stock.')
+                );
+            }
+
             $purchase = Purchase::create([
                 ...$details,
                 'total_price' => $products->sum(fn ($product) => (float) $product->price),
@@ -74,20 +130,24 @@ class PurchaseController extends Controller
                     'product_name' => $product->name,
                     'unit_price' => $product->price,
                     'quantity' => 1,
+                    'size' => $selectedSizes[$product->id] ?? $selectedSize,
                     'subtotal' => $product->price,
                 ]);
 
-                if ($product->stock > 0) {
-                    $product->decrement('stock');
-                }
+                $product->decrement('stock');
             }
 
             return $purchase;
         });
 
         $request->session()->put('checkout_details', $details);
-        $request->session()->forget(['checkout_product_ids', 'cart']);
+        $request->session()->forget(['checkout_product_ids', 'checkout_source', 'cart', 'selected_size', 'selected_sizes']);
 
-        return redirect('/checkout')->with('status', "Purchase #{$purchase->id} placed with COD.");
+       $productNames = $products->pluck('name')->implode(', ');
+
+return redirect('/checkout')->with(
+    'status',
+    "Successfully purchased: {$productNames}"
+);
     }
 }

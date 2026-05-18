@@ -2,42 +2,41 @@
 
 <div class="min-h-screen bg-[#0f1117] text-white font-sans flex flex-col">
 
-    {{-- HEADER --}}
-    <header class="flex items-center justify-between px-6 py-4 bg-[#151823] border-b border-white/5">
+    <header class="relative flex items-center justify-between px-6 py-4 bg-[#151823] border-b border-white/5">
 
-        <div class="flex items-center gap-3">
-            <img src="{{ asset('img/logo.png') }}" class="w-28 rounded-lg shadow-md">
-        </div>
+    {{-- LOGO --}}
+    <div class="flex items-center gap-3">
+        <img src="{{ asset('img/logo.png') }}"
+             class="w-28 rounded-lg shadow-md hover:scale-105 transition">
+    </div>
 
-        <form method="POST" action="/logout">
-            @csrf
-            <button class="text-sm text-white/60 hover:text-white transition">
-                Log Out
-            </button>
-        </form>
+    {{-- CENTER NAV --}}
+    <nav class="absolute left-1/2 -translate-x-1/2 flex items-center gap-3">
 
-    </header>
+        <a href="/admin/dashboard"
+           class="px-4 py-2 rounded-lg text-sm font-medium bg-white/10 text-white border border-white/10">
+            Dashboard
+        </a>
+
+        <a href="/admin/products"
+           class="px-4 py-2 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 transition">
+            Products
+        </a>
+
+    </nav>
+
+    {{-- LOGOUT --}}
+    <form method="POST" action="/logout">
+        @csrf
+        <button type="submit"
+            class="bg-white text-black px-3 py-1 rounded hover:bg-gray-400 transition cursor-pointer font-bold">
+            LOG OUT
+        </button>
+    </form>
+
+</header>
 
     <div class="flex flex-1">
-
-        {{-- SIDEBAR --}}
-        <aside class="w-56 bg-[#151823] border-r border-white/5 p-4">
-
-            <nav class="flex flex-col gap-2">
-
-                <a href="/admin/dashboard"
-                   class="px-3 py-2 rounded-lg text-sm font-medium bg-white/10 text-white border border-white/10">
-                    Dashboard
-                </a>
-
-                <a href="/admin/products"
-                   class="px-3 py-2 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 transition">
-                    Products
-                </a>
-
-            </nav>
-
-        </aside>
 
         {{-- MAIN --}}
         <main class="flex-1 p-6 space-y-6 overflow-y-auto">

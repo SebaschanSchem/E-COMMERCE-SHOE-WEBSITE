@@ -41,9 +41,9 @@
 
         <a href="/cart" class="relative inline-block">
     
-    <img src="{{ asset('img/shopping-cart.png') }}" 
+    <img src="{{ asset('img\shopping.png') }}" 
          alt="cart"
-         class="w-6 h-6 opacity-80 cursor-pointer hover:scale-105 transition duration-300">
+         class="w-9 h-9 opacity-80 cursor-pointer hover:scale-105 transition">
 
     @if(session('cart') && count(session('cart')) > 0)
         <span class="absolute -top-2 -right-2 

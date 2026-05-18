@@ -15,6 +15,7 @@ class PurchaseItem extends Model
         'product_name',
         'unit_price',
         'quantity',
+        'size',
         'subtotal',
     ];
 
@@ -24,6 +25,7 @@ class PurchaseItem extends Model
             'unit_price' => 'decimal:2',
             'subtotal' => 'decimal:2',
             'quantity' => 'integer',
+            'size' => 'integer',
         ];
     }
 

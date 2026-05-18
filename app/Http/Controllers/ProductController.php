@@ -15,12 +15,14 @@ class ProductController extends Controller
         $category = trim((string) $request->query('category'));
 
         $products = Product::query()
+            ->where('stock', '>', 0)
             ->when($search !== '', fn ($query) => $query->where('name', 'like', "%{$search}%"))
             ->when($category !== '', fn ($query) => $query->where('category', $category))
             ->latest()
             ->get();
 
         $categories = Product::query()
+            ->where('stock', '>', 0)
             ->select('category')
             ->distinct()
             ->orderBy('category')
