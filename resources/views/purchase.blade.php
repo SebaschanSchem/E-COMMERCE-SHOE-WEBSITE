@@ -97,22 +97,24 @@
             SIZE
         </label>
 
-        <select
-            name="size"
-            class="w-full rounded-xl border border-white/10 bg-white/[0.06] p-3 text-white focus:outline-none focus:border-lime-300/70"
-            required>
+            <select
+    name="size"
+    class="w-full rounded-xl border border-white/10 bg-white/[0.06] p-3 text-white focus:outline-none focus:border-lime-300/70"
+    required>
 
-            <option value="" disabled {{ old('size') ? '' : 'selected' }}>
-                Choose size
-            </option>
+    <option value="" disabled {{ old('size') ? '' : 'selected' }}
+        class="text-black">
+        Choose size
+    </option>
 
-            @foreach (['41', '42', '43', '44'] as $size)
-                <option value="{{ $size }}"
-                    {{ old('size') === $size ? 'selected' : '' }}>
-                    {{ $size }}
-                </option>
-            @endforeach
-        </select>
+    @foreach (['41', '42', '43', '44'] as $size)
+        <option value="{{ $size }}"
+            class="text-black"
+            {{ old('size') === $size ? 'selected' : '' }}>
+            {{ $size }}
+        </option>
+    @endforeach
+</select>
 
         @error('size')
             <p class="text-xs text-red-400 mt-1">{{ $message }}</p>
@@ -167,18 +169,9 @@
 
                 <div class="mt-5 grid sm:grid-cols-2 gap-3">
 
-                    <form method="POST" action="/cart/{{ $product->id }}">
-                        @csrf
-                        <input type="hidden" name="quantity" class="cart-quantity-input" value="{{ old('quantity', 1) }}">
-                        <button type="submit"
-                            class="w-full rounded-full bg-white py-3 text-xs font-black uppercase tracking-[0.2em] text-black transition duration-300 hover:bg-lime-300">
-                            ADD TO CART
-                        </button>
-                    </form>
-
                     <button type="submit"
                 form="purchaseForm"
-                class="w-full rounded-full border border-white/15 bg-white/[0.04] py-3 text-xs font-black uppercase tracking-[0.2em] text-white transition duration-300 hover:border-lime-300/70 hover:bg-lime-300 hover:text-black">
+                class="w-full rounded-full border text-center border-white/15 bg-white/[0.04] py-3 text-xs font-black uppercase tracking-[0.2em] text-white transition duration-300 hover:border-lime-300/70 hover:bg-lime-300 hover:text-black">
                 PURCHASE
             </button>
 
@@ -195,25 +188,29 @@
 
         <div class="grid md:grid-cols-3 gap-6">
 
-            @for ($i = 0; $i < 3; $i++)
+            @forelse ($product->reviews as $review)
                 <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-xs shadow-2xl shadow-black/20">
 
-                    <div class="mb-2 text-lime-300">*****</div>
+                    <div class="mb-2 text-lime-300">{{ str_repeat('*', $review->rating) }}</div>
 
                     <div class="font-black text-sm mb-1 text-white">
-                        {{ $product->name }}
+                        {{ $review->reviewer_name }}
                     </div>
 
                     <div class="text-white/55 mb-2">
-                        GOOD QUALITY!!
+                        {{ $review->body }}
                     </div>
 
                     <div class="text-white/30 text-[10px]">
-                        5/6/26
+                        {{ $review->created_at->format('n/j/y') }}
                     </div>
 
                 </div>
-            @endfor
+            @empty
+                <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-xs text-white/45 shadow-2xl shadow-black/20 md:col-span-3">
+                    No reviews yet for {{ $product->name }}.
+                </div>
+            @endforelse
 
         </div>
     </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
@@ -54,6 +55,7 @@ class ProductController extends Controller
 
         if ($request->hasFile('image')) {
             $data['image'] = $this->storeUploadedImage($request);
+            $this->deleteStoredImage($product->image);
         }
 
         $product->update($data);
@@ -63,6 +65,8 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        $this->deleteStoredImage($product->image);
+
         $product->delete();
 
         return redirect('/admin/products')->with('status', 'Product deleted.');
@@ -82,18 +86,38 @@ class ProductController extends Controller
     private function storeUploadedImage(Request $request): string
     {
         $file = $request->file('image');
-        $directory = public_path('uploads/products');
 
-        if (! File::exists($directory)) {
-            File::makeDirectory($directory, 0755, true);
+        if (! $file || ! $file->isValid()) {
+            abort(422, 'The product image could not be uploaded. Please choose another image.');
         }
 
         $filename = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
-            . '-' . now()->format('YmdHis')
-            . '.' . $file->getClientOriginalExtension();
+            .'-'.now()->format('YmdHis')
+            .'.'.$file->getClientOriginalExtension();
 
-        $file->move($directory, $filename);
+        $path = $file->storeAs('products', $filename, 'public');
 
-        return 'uploads/products/' . $filename;
+        if (! $path) {
+            abort(500, 'The product image could not be saved.');
+        }
+
+        return 'storage/'.$path;
+    }
+
+    private function deleteStoredImage(?string $image): void
+    {
+        if (! $image || str_starts_with($image, 'http')) {
+            return;
+        }
+
+        if (str_starts_with($image, 'storage/')) {
+            Storage::disk('public')->delete(Str::after($image, 'storage/'));
+
+            return;
+        }
+
+        if (str_starts_with($image, 'uploads/products/')) {
+            File::delete(public_path($image));
+        }
     }
 }

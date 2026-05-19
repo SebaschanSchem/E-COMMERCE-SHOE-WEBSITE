@@ -19,18 +19,18 @@
                  class="w-44 md:w-52 mb-3 rounded-xl ring-1 ring-white/10 drop-shadow-2xl transition duration-300 hover:scale-105">
         </div>
 
-        <div class="mb-8 grid w-full max-w-2xl grid-cols-3 gap-3">
+            <div class="mb-8 grid w-full max-w-2xl grid-cols-3 gap-3">
 
-        <img src="https://mir-s3-cdn-cf.behance.net/project_modules/fs/eaa5ef128327031.61540e7a31630.jpg"
-            class="h-28 w-full object-cover rounded-2xl border border-white/10 opacity-85 shadow-2xl shadow-black/30 transition duration-300 hover:-translate-y-1 hover:opacity-100">
+    <img src="https://cdn.dribbble.com/userupload/37582166/file/original-328c8e183460ce0259e957182fe88c19.jpg?resize=420x&vertical=center"
+        class="h-52 w-full object-cover rounded-[10px] border border-white/10 opacity-85 shadow-2xl shadow-black/30 transition duration-300 hover:-translate-y-1 hover:opacity-100">
 
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRQva76HBW34Ok8im3twNYpSAxPs2c_96Ssg&s"
-            class="h-28 w-full object-cover rounded-2xl border border-white/10 opacity-85 shadow-2xl shadow-black/30 transition duration-300 hover:-translate-y-1 hover:opacity-100">
+    <img src="{{ asset('img/posterni - Copy.webp') }}"
+        class="h-52 w-full object-cover rounded-[10px] border border-white/10 opacity-85 shadow-2xl shadow-black/30 transition duration-300 hover:-translate-y-1 hover:opacity-100">
 
-        <img src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/sneaker-shoe-poster-design-template-9a8882232bf688b7e9ea3a1978f775e6_screen.jpg?ts=1734163250"
-            class="h-28 w-full object-cover rounded-2xl border border-white/10 opacity-85 shadow-2xl shadow-black/30 transition duration-300 hover:-translate-y-1 hover:opacity-100">
+    <img src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/sneaker-shoe-poster-design-template-9a8882232bf688b7e9ea3a1978f775e6_screen.jpg?ts=1734163250"
+        class="h-52 w-full object-cover rounded-[10px] border border-white/10 opacity-85 shadow-2xl shadow-black/30 transition duration-300 hover:-translate-y-1 hover:opacity-100">
 
-        </div>
+</div>
 
         <form method="POST" action="/login" class="w-full max-w-md rounded-[2rem] border border-white/10 bg-black/55 p-8 shadow-[0_40px_120px_rgba(0,0,0,0.7)] backdrop-blur-xl transition duration-300 hover:border-white/20">
             @csrf

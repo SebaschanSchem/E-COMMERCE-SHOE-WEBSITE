@@ -43,11 +43,43 @@
             </div>
 
             {{-- STATUS --}}
-            @if (session('status'))
-                <div class="rounded-2xl bg-white/[0.06] border border-white/10 px-4 py-3 text-sm text-white shadow-2xl shadow-black/20">
-                    {{ session('status') }}
-                </div>
-            @endif
+        @if (session('status'))
+    <div
+        id="toast-notification"
+        class="fixed top-1/2 left-1/2 z-50
+               -translate-x-1/2 -translate-y-1/2
+               w-[340px] max-w-[90%]
+               rounded-2xl border border-red-300/30 bg-green-500 text-white
+               px-5 py-4 text-sm text-center
+               shadow-2xl shadow-red-500/20
+               opacity-0 scale-95
+               transition-all duration-500 ease-in-out">
+
+        {{ session('status') }}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toast = document.getElementById("toast-notification");
+
+            // show
+            setTimeout(() => {
+                toast.classList.remove("opacity-0", "scale-95");
+                toast.classList.add("opacity-100", "scale-100");
+            }, 100);
+
+            // hide after 2 seconds
+            setTimeout(() => {
+                toast.classList.remove("opacity-100", "scale-100");
+                toast.classList.add("opacity-0", "scale-95");
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 500);
+            }, 2000);
+        });
+    </script>
+@endif
 
             {{-- ADD PRODUCT --}}
             <section class="rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/25">
@@ -61,25 +93,25 @@
 
                     <div>
                         <label class="text-xs text-white/50 mb-1 block uppercase tracking-[0.2em]">Name</label>
-                        <input name="name" required
+                        <input name="name" value="{{ old('name') }}" required
                                class="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-3 text-sm text-white focus:outline-none focus:border-lime-300/70">
                     </div>
 
                     <div>
                         <label class="text-xs text-white/50 mb-1 block uppercase tracking-[0.2em]">Price</label>
-                        <input name="price" type="number" step="0.01" required
+                        <input name="price" type="number" step="0.01" value="{{ old('price') }}" required
                                class="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-3 text-sm text-white focus:outline-none focus:border-lime-300/70">
                     </div>
 
                     <div>
                         <label class="text-xs text-white/50 mb-1 block uppercase tracking-[0.2em]">Category</label>
-                        <input name="category" required
+                        <input name="category" value="{{ old('category') }}" required
                                class="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-3 text-sm text-white focus:outline-none focus:border-lime-300/70">
                     </div>
 
                     <div>
                         <label class="text-xs text-white/50 mb-1 block uppercase tracking-[0.2em]">Stock</label>
-                        <input name="stock" type="number" required
+                        <input name="stock" type="number" value="{{ old('stock') }}" required
                                class="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-3 text-sm text-white focus:outline-none focus:border-lime-300/70">
                     </div>
 
@@ -87,8 +119,8 @@
                         <label class="text-xs text-white/50 mb-1 block uppercase tracking-[0.2em]">Image</label>
 
                         <label class="flex h-24 cursor-pointer items-center justify-center rounded-xl border border-dashed border-white/20 bg-black/50 text-xs font-bold uppercase tracking-[0.16em] text-white/60 transition hover:border-lime-300/70 hover:text-lime-300">
-                            Upload Image
-                            <input name="image" type="file" class="hidden" required>
+                            <span data-file-label>Upload Image</span>
+                            <input name="image" type="file" accept="image/*" class="hidden" required>
                         </label>
                     </div>
 
@@ -124,7 +156,7 @@
                         </div>
 
                         {{-- UPDATE --}}
-                        <form method="POST" action="/admin/products/{{ $product->id }}" class="space-y-3">
+                        <form method="POST" action="/admin/products/{{ $product->id }}" enctype="multipart/form-data" class="space-y-3">
                             @csrf
                             @method('PUT')
 
@@ -143,6 +175,11 @@
                                        class="min-w-0 rounded-xl border border-white/10 bg-black/50 px-2 py-3 text-sm text-white focus:outline-none focus:border-lime-300/70">
 
                             </div>
+
+                            <label class="flex cursor-pointer items-center justify-center rounded-xl border border-dashed border-white/15 bg-black/40 px-3 py-3 text-[10px] font-bold uppercase tracking-[0.16em] text-white/50 transition hover:border-lime-300/60 hover:text-lime-300">
+                                <span data-file-label>Change Image</span>
+                                <input name="image" type="file" accept="image/*" class="hidden">
+                            </label>
 
                             <button class="w-full rounded-full bg-white py-3 text-xs font-black uppercase tracking-[0.2em] text-black transition duration-300 hover:bg-lime-300">
                                 UPDATE
@@ -169,4 +206,15 @@
 
         </main>
     </div>
-</div>
+
+<script>
+    document.querySelectorAll('input[type="file"]').forEach((input) => {
+        input.addEventListener('change', () => {
+            const label = input.closest('label')?.querySelector('[data-file-label]');
+
+            if (label) {
+                label.textContent = input.files?.[0]?.name || 'Upload Image';
+            }
+        });
+    });
+</script>

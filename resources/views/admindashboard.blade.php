@@ -104,7 +104,7 @@
                                     <td class="py-3 text-white/70">{{ $purchase->address }}</td>
 
                                     <td class="py-3 text-white/80">
-                                        {{ $purchase->items->map(fn ($item) => $item->product_name . ' x' . $item->quantity)->join(', ') }}
+                                        {{ $purchase->items->map(fn ($item) => $item->product_name . ' [' . $item->quantity . ']' )->join(' | ') }}
                                     </td>
 
                                     <td class="py-3 text-white/80">

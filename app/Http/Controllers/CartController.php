@@ -9,7 +9,7 @@ class CartController extends Controller
 {
     public function index(Request $request)
     {
-        $cartIds = $request->session()->get('cart', []);
+        $cartIds = $this->cartProductIds($request->session()->get('cart', []));
         $products = Product::whereIn('id', $cartIds)
             ->where('stock', '>', 0)
             ->get();
@@ -37,25 +37,40 @@ class CartController extends Controller
                 ->withInput();
         }
 
-        $cart = $request->session()->get('cart', []);
-        $cartQuantities = $request->session()->get('cart_quantities', []);
+        $rawCart = $request->session()->get('cart', []);
+        $cart = $this->cartProductIds($rawCart);
+        $legacyCartQuantities = array_is_list($rawCart) ? [] : $this->cartQuantities($rawCart, $cart);
+        $cartQuantities = array_replace(
+            $legacyCartQuantities,
+            $this->cartQuantities($request->session()->get('cart_quantities', []), $cart)
+        );
+        $productId = $product->id;
+        $alreadyInCart = in_array($productId, $cart, true);
+        $newQuantity = ($cartQuantities[$productId] ?? 0) + $quantity;
 
-        if (! in_array($product->id, $cart, true)) {
-            $cart[] = $product->id;
+        if ($newQuantity > $product->stock) {
+            return back()
+                ->withErrors(['quantity' => 'Quantity cannot be greater than available stock.'])
+                ->withInput();
         }
 
-        $cartQuantities[$product->id] = $quantity;
+        if (! $alreadyInCart) {
+            $cart[] = $productId;
+        }
+
+        $cartQuantities[$productId] = $newQuantity;
 
         $request->session()->put('cart', $cart);
         $request->session()->put('cart_quantities', $cartQuantities);
+        $request->session()->forget(['checkout_product_ids', 'checkout_source', 'selected_quantity', 'selected_quantities']);
 
-        return back()->with('status', "{$product->name} added to cart.");
+        return back()->with('status', $alreadyInCart ? "{$product->name} quantity increased." : "{$product->name} added to cart.");
     }
 
     public function remove(Request $request, Product $product)
     {
         $cart = array_values(array_filter(
-            $request->session()->get('cart', []),
+            $this->cartProductIds($request->session()->get('cart', [])),
             fn ($id) => (int) $id !== $product->id
         ));
 
@@ -73,7 +88,7 @@ class CartController extends Controller
 
     public function purchaseAll(Request $request)
     {
-        $cart = $request->session()->get('cart', []);
+        $cart = $this->cartProductIds($request->session()->get('cart', []));
         $inStockIds = Product::whereIn('id', $cart)
             ->where('stock', '>', 0)
             ->pluck('id')
@@ -123,5 +138,27 @@ class CartController extends Controller
         $request->session()->forget(['selected_size', 'selected_quantity']);
 
         return redirect('/checkout');
+    }
+
+    private function cartProductIds(array $cart): array
+    {
+        $productIds = array_is_list($cart) ? $cart : array_keys($cart);
+
+        return collect($productIds)
+            ->map(fn ($id) => (int) $id)
+            ->filter(fn ($id) => $id > 0)
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    private function cartQuantities(array $quantities, array $cart): array
+    {
+        $cartLookup = array_flip($cart);
+
+        return collect($quantities)
+            ->mapWithKeys(fn ($quantity, $productId) => [(int) $productId => max(1, (int) $quantity)])
+            ->filter(fn ($quantity, $productId) => isset($cartLookup[$productId]))
+            ->all();
     }
 }

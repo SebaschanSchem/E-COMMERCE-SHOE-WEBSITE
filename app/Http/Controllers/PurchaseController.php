@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Purchase;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,6 +17,10 @@ class PurchaseController extends Controller
         if ($product->stock <= 0) {
             return redirect('/products')->with('status', 'This product is out of stock.');
         }
+
+        $product->load([
+            'reviews' => fn ($query) => $query->latest()->take(3),
+        ]);
 
         $request->session()->put('checkout_product_ids', [$product->id]);
         $request->session()->put('checkout_source', 'direct');
@@ -30,12 +35,12 @@ class PurchaseController extends Controller
             $checkoutProduct = Product::find($checkoutProductIds[0] ?? null);
 
             $validated = $request->validate([
-                'size' => ['required', 'in:' . implode(',', self::SHOE_SIZES)],
+                'size' => ['required', 'in:'.implode(',', self::SHOE_SIZES)],
                 'quantity' => 'required|integer|min:1|max:99',
             ]);
 
             if (! $checkoutProduct || $validated['quantity'] > $checkoutProduct->stock) {
-                return redirect('/purchase/' . ($checkoutProductIds[0] ?? ''))
+                return redirect('/purchase/'.($checkoutProductIds[0] ?? ''))
                     ->withErrors(['quantity' => 'Quantity cannot be greater than available stock.'])
                     ->withInput();
             }
@@ -76,7 +81,7 @@ class PurchaseController extends Controller
         $selectedQuantities = $request->session()->get('selected_quantities', []);
 
         if ($isDirectPurchase && ! in_array($selectedSize, self::SHOE_SIZES, true)) {
-            return redirect('/purchase/' . $ids[0])
+            return redirect('/purchase/'.$ids[0])
                 ->withErrors(['size' => 'Please choose a shoe size before purchasing.']);
         }
 
@@ -84,12 +89,12 @@ class PurchaseController extends Controller
             $directProduct = $products->firstWhere('id', $ids[0] ?? null);
 
             if ($selectedQuantity < 1 || $selectedQuantity > 99) {
-                return redirect('/purchase/' . $ids[0])
+                return redirect('/purchase/'.$ids[0])
                     ->withErrors(['quantity' => 'Please enter a valid quantity.']);
             }
 
             if ($directProduct && $selectedQuantity > $directProduct->stock) {
-                return redirect('/purchase/' . $ids[0])
+                return redirect('/purchase/'.$ids[0])
                     ->withErrors(['quantity' => 'Quantity cannot be greater than available stock.']);
             }
         }
@@ -119,12 +124,12 @@ class PurchaseController extends Controller
         $selectedQuantities = $request->session()->get('selected_quantities', []);
 
         if ($isDirectPurchase && ! in_array($selectedSize, self::SHOE_SIZES, true)) {
-            return redirect('/purchase/' . $ids[0])
+            return redirect('/purchase/'.$ids[0])
                 ->withErrors(['size' => 'Please choose a shoe size before purchasing.']);
         }
 
         if ($isDirectPurchase && ($selectedQuantity < 1 || $selectedQuantity > 99)) {
-            return redirect('/purchase/' . $ids[0])
+            return redirect('/purchase/'.$ids[0])
                 ->withErrors(['quantity' => 'Please enter a valid quantity.']);
         }
 
@@ -143,14 +148,16 @@ class PurchaseController extends Controller
             ]);
         }
 
-        $purchase = DB::transaction(function () use ($ids, $details, $selectedSize, $selectedSizes, $selectedQuantities, $isDirectPurchase) {
+        $purchasedQuantities = [];
+
+        $purchase = DB::transaction(function () use ($ids, $details, $selectedSize, $selectedSizes, $selectedQuantities, $isDirectPurchase, &$purchasedQuantities) {
             $products = Product::whereIn('id', $ids)
                 ->where('stock', '>', 0)
                 ->lockForUpdate()
                 ->get();
 
             if ($products->isEmpty()) {
-                throw new \Illuminate\Http\Exceptions\HttpResponseException(
+                throw new HttpResponseException(
                     redirect('/products')->with('status', 'Selected products are out of stock.')
                 );
             }
@@ -161,15 +168,15 @@ class PurchaseController extends Controller
                 $quantity = (int) ($selectedQuantities[$product->id] ?? 1);
 
                 if ($quantity < 1 || $quantity > 99) {
-                    throw new \Illuminate\Http\Exceptions\HttpResponseException(
-                        redirect($isDirectPurchase ? '/purchase/' . $product->id : '/cart')
+                    throw new HttpResponseException(
+                        redirect($isDirectPurchase ? '/purchase/'.$product->id : '/cart')
                             ->withErrors(['quantity' => 'Please enter a valid quantity.'])
                     );
                 }
 
                 if ($quantity > $product->stock) {
-                    throw new \Illuminate\Http\Exceptions\HttpResponseException(
-                        redirect($isDirectPurchase ? '/purchase/' . $product->id : '/cart')
+                    throw new HttpResponseException(
+                        redirect($isDirectPurchase ? '/purchase/'.$product->id : '/cart')
                             ->withErrors(['quantity' => 'Quantity cannot be greater than available stock.'])
                     );
                 }
@@ -186,6 +193,7 @@ class PurchaseController extends Controller
             foreach ($products as $product) {
                 $quantity = (int) ($selectedQuantities[$product->id] ?? 1);
                 $subtotal = (float) $product->price * $quantity;
+                $purchasedQuantities[$product->id] = $quantity;
 
                 $purchase->items()->create([
                     'product_id' => $product->id,
@@ -203,13 +211,46 @@ class PurchaseController extends Controller
         });
 
         $request->session()->put('checkout_details', $details);
-        $request->session()->forget(['checkout_product_ids', 'checkout_source', 'cart', 'cart_quantities', 'selected_size', 'selected_sizes', 'selected_quantity', 'selected_quantities']);
+        $this->removePurchasedItemsFromCart($request, $purchasedQuantities);
+        $request->session()->forget(['checkout_product_ids', 'checkout_source', 'selected_size', 'selected_quantity', 'selected_quantities']);
 
-       $productNames = $products->pluck('name')->implode(', ');
+        $productNames = $products->pluck('name')->implode(', ');
 
-return redirect('/checkout')->with(
-    'status',
-    "Successfully purchased: {$productNames}"
-);
+        return redirect('/checkout')->with(
+            'status',
+            "Successfully purchased: {$productNames}"
+        );
+    }
+
+    private function removePurchasedItemsFromCart(Request $request, array $purchasedQuantities): void
+    {
+        $cart = collect($request->session()->get('cart', []))
+            ->map(fn ($id) => (int) $id)
+            ->filter(fn ($id) => $id > 0)
+            ->unique()
+            ->values()
+            ->all();
+        $cartQuantities = collect($request->session()->get('cart_quantities', []))
+            ->mapWithKeys(fn ($quantity, $productId) => [(int) $productId => (int) $quantity])
+            ->all();
+        $selectedSizes = $request->session()->get('selected_sizes', []);
+
+        foreach ($purchasedQuantities as $productId => $purchasedQuantity) {
+            $productId = (int) $productId;
+            $remainingQuantity = (int) ($cartQuantities[$productId] ?? 0) - (int) $purchasedQuantity;
+
+            if ($remainingQuantity > 0) {
+                $cartQuantities[$productId] = $remainingQuantity;
+
+                continue;
+            }
+
+            $cart = array_values(array_filter($cart, fn ($id) => (int) $id !== $productId));
+            unset($cartQuantities[$productId], $selectedSizes[$productId]);
+        }
+
+        $request->session()->put('cart', $cart);
+        $request->session()->put('cart_quantities', $cartQuantities);
+        $request->session()->put('selected_sizes', $selectedSizes);
     }
 }
