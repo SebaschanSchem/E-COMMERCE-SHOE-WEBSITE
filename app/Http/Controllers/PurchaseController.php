@@ -26,16 +26,30 @@ class PurchaseController extends Controller
     public function checkout(Request $request)
     {
         if ($request->has('size')) {
+            $checkoutProductIds = $request->session()->get('checkout_product_ids', []);
+            $checkoutProduct = Product::find($checkoutProductIds[0] ?? null);
+
             $validated = $request->validate([
                 'size' => ['required', 'in:' . implode(',', self::SHOE_SIZES)],
+                'quantity' => 'required|integer|min:1|max:99',
             ]);
 
+            if (! $checkoutProduct || $validated['quantity'] > $checkoutProduct->stock) {
+                return redirect('/purchase/' . ($checkoutProductIds[0] ?? ''))
+                    ->withErrors(['quantity' => 'Quantity cannot be greater than available stock.'])
+                    ->withInput();
+            }
+
             $request->session()->put('selected_size', $validated['size']);
-            $checkoutProductIds = $request->session()->get('checkout_product_ids', []);
+            $request->session()->put('selected_quantity', $validated['quantity']);
 
             if (! empty($checkoutProductIds)) {
                 $request->session()->put('selected_sizes', [
                     $checkoutProductIds[0] => $validated['size'],
+                ]);
+
+                $request->session()->put('selected_quantities', [
+                    $checkoutProductIds[0] => $validated['quantity'],
                 ]);
             }
         }
@@ -58,17 +72,33 @@ class PurchaseController extends Controller
 
         $selectedSize = $request->session()->get('selected_size');
         $selectedSizes = $request->session()->get('selected_sizes', []);
+        $selectedQuantity = (int) $request->session()->get('selected_quantity', 1);
+        $selectedQuantities = $request->session()->get('selected_quantities', []);
 
         if ($isDirectPurchase && ! in_array($selectedSize, self::SHOE_SIZES, true)) {
             return redirect('/purchase/' . $ids[0])
                 ->withErrors(['size' => 'Please choose a shoe size before purchasing.']);
         }
 
-        $total = $products->sum(fn ($product) => (float) $product->price);
+        if ($isDirectPurchase) {
+            $directProduct = $products->firstWhere('id', $ids[0] ?? null);
+
+            if ($selectedQuantity < 1 || $selectedQuantity > 99) {
+                return redirect('/purchase/' . $ids[0])
+                    ->withErrors(['quantity' => 'Please enter a valid quantity.']);
+            }
+
+            if ($directProduct && $selectedQuantity > $directProduct->stock) {
+                return redirect('/purchase/' . $ids[0])
+                    ->withErrors(['quantity' => 'Quantity cannot be greater than available stock.']);
+            }
+        }
+
+        $total = $products->sum(fn ($product) => (float) $product->price * (int) ($selectedQuantities[$product->id] ?? 1));
         $checkoutDetails = $request->session()->get('checkout_details');
         $canEdit = $request->boolean('edit') || empty($checkoutDetails);
 
-        return view('cod', compact('products', 'total', 'checkoutDetails', 'canEdit', 'selectedSize', 'selectedSizes'));
+        return view('cod', compact('products', 'total', 'checkoutDetails', 'canEdit', 'selectedSize', 'selectedSizes', 'selectedQuantity', 'selectedQuantities'));
     }
 
     public function placeOrder(Request $request)
@@ -85,10 +115,17 @@ class PurchaseController extends Controller
 
         $selectedSize = $request->session()->get('selected_size');
         $selectedSizes = $request->session()->get('selected_sizes', []);
+        $selectedQuantity = (int) $request->session()->get('selected_quantity', 1);
+        $selectedQuantities = $request->session()->get('selected_quantities', []);
 
         if ($isDirectPurchase && ! in_array($selectedSize, self::SHOE_SIZES, true)) {
             return redirect('/purchase/' . $ids[0])
                 ->withErrors(['size' => 'Please choose a shoe size before purchasing.']);
+        }
+
+        if ($isDirectPurchase && ($selectedQuantity < 1 || $selectedQuantity > 99)) {
+            return redirect('/purchase/' . $ids[0])
+                ->withErrors(['quantity' => 'Please enter a valid quantity.']);
         }
 
         $existingDetails = $request->session()->get('checkout_details');
@@ -106,7 +143,7 @@ class PurchaseController extends Controller
             ]);
         }
 
-        $purchase = DB::transaction(function () use ($ids, $details, $selectedSize, $selectedSizes) {
+        $purchase = DB::transaction(function () use ($ids, $details, $selectedSize, $selectedSizes, $selectedQuantities, $isDirectPurchase) {
             $products = Product::whereIn('id', $ids)
                 ->where('stock', '>', 0)
                 ->lockForUpdate()
@@ -118,30 +155,55 @@ class PurchaseController extends Controller
                 );
             }
 
+            $totalPrice = 0;
+
+            foreach ($products as $product) {
+                $quantity = (int) ($selectedQuantities[$product->id] ?? 1);
+
+                if ($quantity < 1 || $quantity > 99) {
+                    throw new \Illuminate\Http\Exceptions\HttpResponseException(
+                        redirect($isDirectPurchase ? '/purchase/' . $product->id : '/cart')
+                            ->withErrors(['quantity' => 'Please enter a valid quantity.'])
+                    );
+                }
+
+                if ($quantity > $product->stock) {
+                    throw new \Illuminate\Http\Exceptions\HttpResponseException(
+                        redirect($isDirectPurchase ? '/purchase/' . $product->id : '/cart')
+                            ->withErrors(['quantity' => 'Quantity cannot be greater than available stock.'])
+                    );
+                }
+
+                $totalPrice += (float) $product->price * $quantity;
+            }
+
             $purchase = Purchase::create([
                 ...$details,
-                'total_price' => $products->sum(fn ($product) => (float) $product->price),
+                'total_price' => $totalPrice,
                 'payment_method' => 'Cash on Delivery',
             ]);
 
             foreach ($products as $product) {
+                $quantity = (int) ($selectedQuantities[$product->id] ?? 1);
+                $subtotal = (float) $product->price * $quantity;
+
                 $purchase->items()->create([
                     'product_id' => $product->id,
                     'product_name' => $product->name,
                     'unit_price' => $product->price,
-                    'quantity' => 1,
+                    'quantity' => $quantity,
                     'size' => $selectedSizes[$product->id] ?? $selectedSize,
-                    'subtotal' => $product->price,
+                    'subtotal' => $subtotal,
                 ]);
 
-                $product->decrement('stock');
+                $product->decrement('stock', $quantity);
             }
 
             return $purchase;
         });
 
         $request->session()->put('checkout_details', $details);
-        $request->session()->forget(['checkout_product_ids', 'checkout_source', 'cart', 'selected_size', 'selected_sizes']);
+        $request->session()->forget(['checkout_product_ids', 'checkout_source', 'cart', 'cart_quantities', 'selected_size', 'selected_sizes', 'selected_quantity', 'selected_quantities']);
 
        $productNames = $products->pluck('name')->implode(', ');
 

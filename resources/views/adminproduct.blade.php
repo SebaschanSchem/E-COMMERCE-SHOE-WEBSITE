@@ -1,23 +1,23 @@
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-<div class="min-h-screen bg-[#0f1117] text-white flex flex-col font-sans">
+<div class="min-h-screen bg-[#050505] text-white flex flex-col font-sans antialiased">
 
-    <header class="relative flex items-center justify-between px-6 py-4 bg-[#151823] border-b border-white/5">
+    <header class="relative flex flex-col gap-4 px-6 py-4 bg-black/80 border-b border-white/10 backdrop-blur-xl md:flex-row md:items-center md:justify-between">
 
     {{-- Logo --}}
-    <img src="{{ asset('img/logo.png') }}" 
-         class="w-28 rounded-lg hover:scale-105 transition">
+    <img src="{{ asset('img/logo.png') }}"
+         class="w-28 rounded-xl ring-1 ring-white/10 shadow-2xl shadow-black/40 transition duration-300 hover:scale-105">
 
     {{-- CENTER NAV --}}
-    <nav class="absolute left-1/2 -translate-x-1/2 flex items-center gap-3">
+    <nav class="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] p-1 md:absolute md:left-1/2 md:-translate-x-1/2">
 
         <a href="/admin/dashboard"
-           class="px-4 py-2 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 transition">
+           class="px-4 py-2 rounded-full text-xs font-bold uppercase tracking-[0.18em] text-white/60 transition hover:bg-white/10 hover:text-white">
             Dashboard
         </a>
 
         <a href="/admin/products"
-           class="px-4 py-2 rounded-lg text-sm bg-white/10 text-white border border-white/10">
+           class="px-4 py-2 rounded-full text-xs font-black uppercase tracking-[0.18em] bg-white text-black shadow-lg">
             Products
         </a>
 
@@ -27,7 +27,7 @@
     <form method="POST" action="/logout">
         @csrf
         <button type="submit"
-            class="bg-white text-black px-3 py-1 rounded hover:bg-gray-400 transition cursor-pointer font-bold">
+            class="rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-black transition duration-300 hover:bg-lime-300 cursor-pointer">
             LOG OUT
         </button>
     </form>
@@ -37,17 +37,22 @@
         {{-- MAIN --}}
         <main class="flex-1 p-6 space-y-6 overflow-y-auto">
 
+            <div>
+                <p class="text-xs font-bold uppercase tracking-[0.35em] text-lime-300">Inventory Studio</p>
+                <h1 class="mt-2 text-3xl font-black uppercase tracking-tight md:text-5xl">Products</h1>
+            </div>
+
             {{-- STATUS --}}
             @if (session('status'))
-                <div class="rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-sm text-white">
+                <div class="rounded-2xl bg-white/[0.06] border border-white/10 px-4 py-3 text-sm text-white shadow-2xl shadow-black/20">
                     {{ session('status') }}
                 </div>
             @endif
 
             {{-- ADD PRODUCT --}}
-            <section class="bg-[#151823] border border-white/5 rounded-2xl p-6">
+            <section class="rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/25">
 
-                <h1 class="text-xl font-bold mb-5">Add Product</h1>
+                <h1 class="text-xl font-black uppercase tracking-wide mb-5">Add Product</h1>
 
                 <form method="POST" action="/admin/products" enctype="multipart/form-data"
                       class="grid lg:grid-cols-5 gap-4 items-end">
@@ -55,39 +60,39 @@
                     @csrf
 
                     <div>
-                        <label class="text-xs text-white/50 mb-1 block">Name</label>
+                        <label class="text-xs text-white/50 mb-1 block uppercase tracking-[0.2em]">Name</label>
                         <input name="name" required
-                               class="w-full bg-[#0f1117] border border-white/10 rounded-lg px-3 py-2 text-sm text-white">
+                               class="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-3 text-sm text-white focus:outline-none focus:border-lime-300/70">
                     </div>
 
                     <div>
-                        <label class="text-xs text-white/50 mb-1 block">Price</label>
+                        <label class="text-xs text-white/50 mb-1 block uppercase tracking-[0.2em]">Price</label>
                         <input name="price" type="number" step="0.01" required
-                               class="w-full bg-[#0f1117] border border-white/10 rounded-lg px-3 py-2 text-sm text-white">
+                               class="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-3 text-sm text-white focus:outline-none focus:border-lime-300/70">
                     </div>
 
                     <div>
-                        <label class="text-xs text-white/50 mb-1 block">Category</label>
+                        <label class="text-xs text-white/50 mb-1 block uppercase tracking-[0.2em]">Category</label>
                         <input name="category" required
-                               class="w-full bg-[#0f1117] border border-white/10 rounded-lg px-3 py-2 text-sm text-white">
+                               class="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-3 text-sm text-white focus:outline-none focus:border-lime-300/70">
                     </div>
 
                     <div>
-                        <label class="text-xs text-white/50 mb-1 block">Stock</label>
+                        <label class="text-xs text-white/50 mb-1 block uppercase tracking-[0.2em]">Stock</label>
                         <input name="stock" type="number" required
-                               class="w-full bg-[#0f1117] border border-white/10 rounded-lg px-3 py-2 text-sm text-white">
+                               class="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-3 text-sm text-white focus:outline-none focus:border-lime-300/70">
                     </div>
 
                     <div>
-                        <label class="text-xs text-white/50 mb-1 block">Image</label>
+                        <label class="text-xs text-white/50 mb-1 block uppercase tracking-[0.2em]">Image</label>
 
-                        <label class="flex h-24 cursor-pointer items-center justify-center rounded-lg border border-dashed border-white/20 bg-[#0f1117] text-xs text-white/60 hover:border-white/40 transition">
+                        <label class="flex h-24 cursor-pointer items-center justify-center rounded-xl border border-dashed border-white/20 bg-black/50 text-xs font-bold uppercase tracking-[0.16em] text-white/60 transition hover:border-lime-300/70 hover:text-lime-300">
                             Upload Image
                             <input name="image" type="file" class="hidden" required>
                         </label>
                     </div>
 
-                    <button class="bg-white text-black font-bold rounded-lg px-4 py-2 hover:bg-gray-200 transition">
+                    <button class="rounded-full bg-white px-5 py-3 text-xs font-black uppercase tracking-[0.2em] text-black transition duration-300 hover:bg-lime-300">
                         Add Product
                     </button>
 
@@ -112,10 +117,10 @@
                             : asset($product->image);
                     @endphp
 
-                    <div class="bg-[#151823] border border-white/5 rounded-2xl p-4 hover:border-white/20 transition">
+                    <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-black/25 transition duration-300 hover:-translate-y-1 hover:border-lime-300/40">
 
-                        <div class="h-40 bg-[#0f1117] border border-white/10 rounded-lg flex items-center justify-center mb-3">
-                            <img src="{{ $image }}" class="w-full h-full object-contain">
+                        <div class="h-40 bg-gradient-to-br from-white via-zinc-100 to-zinc-300 rounded-xl flex items-center justify-center mb-4 overflow-hidden">
+                            <img src="{{ $image }}" class="w-full h-full object-contain p-3">
                         </div>
 
                         {{-- UPDATE --}}
@@ -124,22 +129,22 @@
                             @method('PUT')
 
                             <input name="name" value="{{ $product->name }}"
-                                   class="w-full bg-[#0f1117] border border-white/10 rounded-lg px-3 py-2 text-sm text-white">
+                                   class="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-3 text-sm text-white focus:outline-none focus:border-lime-300/70">
 
                             <div class="grid grid-cols-3 gap-2">
 
                                 <input name="price" type="number" value="{{ $product->price }}"
-                                       class="bg-[#0f1117] border border-white/10 rounded-lg px-2 py-2 text-sm text-white">
+                                       class="min-w-0 rounded-xl border border-white/10 bg-black/50 px-2 py-3 text-sm text-white focus:outline-none focus:border-lime-300/70">
 
                                 <input name="category" value="{{ $product->category }}"
-                                       class="bg-[#0f1117] border border-white/10 rounded-lg px-2 py-2 text-sm text-white">
+                                       class="min-w-0 rounded-xl border border-white/10 bg-black/50 px-2 py-3 text-sm text-white focus:outline-none focus:border-lime-300/70">
 
                                 <input name="stock" type="number" value="{{ $product->stock }}"
-                                       class="bg-[#0f1117] border border-white/10 rounded-lg px-2 py-2 text-sm text-white">
+                                       class="min-w-0 rounded-xl border border-white/10 bg-black/50 px-2 py-3 text-sm text-white focus:outline-none focus:border-lime-300/70">
 
                             </div>
 
-                            <button class="w-full bg-white text-black py-2 rounded-lg text-sm font-bold hover:bg-gray-200">
+                            <button class="w-full rounded-full bg-white py-3 text-xs font-black uppercase tracking-[0.2em] text-black transition duration-300 hover:bg-lime-300">
                                 UPDATE
                             </button>
 
@@ -150,7 +155,7 @@
                             @csrf
                             @method('DELETE')
 
-                            <button class="w-full border border-red-500/40 text-red-400 rounded-lg py-2 text-sm hover:bg-red-500 hover:text-white transition">
+                            <button class="w-full rounded-full border border-red-500/40 py-3 text-xs font-black uppercase tracking-[0.2em] text-red-300 transition hover:bg-red-500 hover:text-white">
                                 DELETE
                             </button>
 
